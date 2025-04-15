@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glucose Predictor</title>
+    
+    <!-- Include your custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/ff53837e9a.js" crossorigin="anonymous"></script>
+
+
+</head>
+<body>
+    <!-- Navbar (Unchanged) -->
+    <nav class="navbar">
+        <div class="navbar__container">
+            <a href="/" id="navbar__logo"><i class="fa-solid fa-house-chimney-medical"></i>GLUCOSE PREDICTOR</a>
+            <div class="navbar__toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="navbar__menu">
+                <li class="navbar__item">
+                    <a href="/" class="navbar__links">Home</a>
+                </li>
+                <li class="navbar__item">
+                    <a href="/tech.html" class="navbar__links">Tech</a>
+                </li>
+                <li class="navbar__item">
+                    <a href="/" class="navbar__links">Products</a>
+                </li>
+                <li class="navbar__btn">
+                    <a href="/" class="button">Sign up</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Section 1: Glucose Insights -->
+    <div class="section-container">
+        <h2>Glucose Insights</h2>
+        <div class="text-container">
+            <p>Here you can see how your glucose levels fluctuate over time:</p>
+        </div>
+        <div id="plotly-chart-glucose">
+            {{ graph_html | safe }}
+        </div>
+    </div>
+
+    <!-- Section 2: Carbohydrates -->
+    <div class="section-container">
+        <h2>Carbohydrates Insights</h2>
+        <div class="text-container">
+            <p>Here you can see your carbohydrate intake and its effect on glucose:</p>
+        </div>
+        <div id="plotly-chart-carbs">
+            {{ graphcar_html | safe }}
+        </div>
+    </div>
+
+    <!-- Include your custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
