@@ -9,11 +9,9 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    data = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/insulin_carbs_absorption.csv"
-    df = pd.read_csv(data, sep=",")
-    df["Time"] = pd.to_datetime(df["Time"], format="%b %d, %Y %I:%M:%S %p")
-    df.sort_values(by='Time', inplace=True)
-
+    data = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/insulin_carbs_absorption.csv"
+    df = pd.read_csv(data, sep="\t")
+    df['Time'] = pd.to_datetime(df['Time'], format='%Y-%m-%d %H:%M:%S')
     df_24h,df_48h,weekly_slices = plots.makeTime(df)
 
     # Generate the plots
