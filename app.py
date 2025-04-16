@@ -14,16 +14,53 @@ def index():
     df['Time'] = pd.to_datetime(df['Time'], format='%Y-%m-%d %H:%M:%S')
     df_24h,df_48h,weekly_slices = plots.makeTime(df)
 
+    return render_template('index.html')
+
+@app.route('/profile.html')
+def profile():
+
+    data = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/insulin_carbs_absorption.csv"
+    df = pd.read_csv(data, sep="\t")
+    df['Time'] = pd.to_datetime(df['Time'], format='%Y-%m-%d %H:%M:%S')
+    df_24h,df_48h,weekly_slices = plots.makeTime(df)
+
     # Generate the plots
     fig = plots.plotGlucose(df,df_24h,df_48h,weekly_slices)
     fig_car = plots.plotCarbohydrates(df,df_24h,df_48h,weekly_slices)
+    fig_stress = plots.plot_stress(df,df_24h,df_48h,weekly_slices)
+    fig_ex = plots.plot_exercise(df,df_24h,df_48h,weekly_slices)
 
     # Convert figures to HTML for rendering in template
     graph_html = pio.to_html(fig, full_html=False)
     graphcar_html = pio.to_html(fig_car, full_html=False)
+    graphstress = pio.to_html(fig_stress,full_html=False)
+    graphex = pio.to_html(fig_ex,full_html=False)
+    # Render the profile page
 
-    return render_template('index.html', graph_html=graph_html,
-                           graphcar_html=graphcar_html)
+    return render_template('profile.html', graph_html=graph_html,
+                           graphcar_html=graphcar_html,
+                           graphstress = graphstress,
+                           graphex = graphex)
+
+
+@app.route('/index.html')
+def index2():
+    data = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/insulin_carbs_absorption.csv"
+    df = pd.read_csv(data, sep="\t")
+    df['Time'] = pd.to_datetime(df['Time'], format='%Y-%m-%d %H:%M:%S')
+    df_24h,df_48h,weekly_slices = plots.makeTime(df)
+
+    return render_template('index.html')
+
+
+@app.route('/explorer.html')
+def explore():
+    data = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/insulin_carbs_absorption.csv"
+    df = pd.read_csv(data, sep="\t")
+    df['Time'] = pd.to_datetime(df['Time'], format='%Y-%m-%d %H:%M:%S')
+    df_24h,df_48h,weekly_slices = plots.makeTime(df)
+
+    return render_template('explorer.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

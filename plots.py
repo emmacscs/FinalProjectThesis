@@ -2,7 +2,7 @@ import plotly.graph_objects as go
 import pandas as pd
 
 def makeTime(df):
-    
+
     # SLICE: 24 HOURS
     end_time = df['Time'].max() #finish time is this precise moment
     start_time = end_time - pd.Timedelta(hours=24)
@@ -329,3 +329,110 @@ def plot_stress(df,df_24h,df_48,weekly_slices):
     )
 
     return fig_stress
+
+
+def plot_exercise(df,df_24h,df_48,weekly_slices):
+    fig_ex = go.Figure()
+
+    # 1. 24h Trace: Group by 30-minute intervals
+    df_24h_resampled = df_24h.resample('30T', on='Time').mean()  # '30T' is for 30-minute intervals
+    fig_ex.add_trace(go.Bar(
+        x=df_24h_resampled.index,
+        y=df_24h_resampled['Calories'],
+        name='24h (30min intervals)',
+        visible=True,
+        marker_color='orange'
+    ))
+
+    # 2. 48h Trace: Group by 30-minute intervals
+    df_48_resampled = df_48.resample('30T', on='Time').mean()  # '30T' is for 30-minute intervals
+    fig_ex.add_trace(go.Bar(
+        x=df_48_resampled.index,
+        y=df_48_resampled['Calories'],
+        name='48h (30min intervals)',
+        visible=False,
+        marker_color='orange'
+    ))
+
+    # 3. Weekly Traces: Group by day and compute average carbohydrates
+    for label, df_w in weekly_slices:
+        # Resample by day (group by day and take the mean)
+        df_w_resampled = df_w.resample('60T', on='Time').mean()  # '30T' for daily averages
+        fig_ex.add_trace(go.Bar(
+            x=df_w_resampled.index,
+            y=df_w_resampled['Calories'],
+            name=label,
+            visible=False,
+            marker_color='orange'
+        ))
+
+        
+    fig_ex.update_layout(
+        updatemenus=[
+        
+            # Dropdown for selecting a specific week
+            dict(
+                type="dropdown",
+                direction="down",
+                x=0.1, y=1.15,
+                showactive=True,
+                buttons=[
+                    dict(
+                        label="24h",
+                        method="update",
+                        args=[
+                            {"visible": [True, False, False, False, False, False]},
+                            {"xaxis": {"range": [df_24h['Time'].min(), df_24h['Time'].max()]}}
+                        ]
+                    ),
+                    dict(
+                        label="48h",
+                        method="update",
+                        args=[
+                            {"visible": [False, True, False, False, False, False]},
+                            {"xaxis": {"range": [df_48['Time'].min(), df_48['Time'].max()]}}
+                        ]
+                    ),
+                    dict(
+                        label="Week: 19/04 - 25/04",
+                        method="update",
+                        args=[
+                            {"visible": [False, False, True, False, False, False]},
+                            {"xaxis": {"range": [weekly_slices[0][1]['Time'].min(), weekly_slices[0][1]['Time'].max()]}}
+                        ]
+                    ),
+                    dict(
+                        label="Week: 12/04 - 18/04",
+                        method="update",
+                        args=[
+                            {"visible": [False, False, False, True, False, False]},
+                            {"xaxis": {"range": [weekly_slices[1][1]['Time'].min(), weekly_slices[1][1]['Time'].max()]}}
+                        ]
+                    ),
+                    dict(
+                        label="Week: 5/04 - 11/04",
+                        method="update",
+                        args=[
+                            {"visible": [False, False, False, False, True, False]},
+                            {"xaxis": {"range": [weekly_slices[2][1]['Time'].min(), weekly_slices[2][1]['Time'].max()]}}
+                        ]
+                    ),
+                    dict(
+                        label="Week: 29/03 - 4/04",
+                        method="update",
+                        args=[
+                            {"visible": [False, False, False, False, False, True]},
+                            {"xaxis": {"range": [weekly_slices[3][1]['Time'].min(), weekly_slices[3][1]['Time'].max()]}}
+                        ]
+                    )
+                ]
+            )
+        ],
+        title="Calories Trends - Time Explorer",
+        xaxis_title="Time",
+        yaxis_title="Calories",
+        xaxis_range=[df_24h['Time'].min(), df_24h['Time'].max()],
+        yaxis_range=[df['Calories'].min(),df['Calories'].max()]
+    )
+
+    return fig_ex
