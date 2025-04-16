@@ -11,10 +11,14 @@ app = Flask(__name__)
 def index():
     data = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/insulin_carbs_absorption.csv"
     df = pd.read_csv(data, sep=",")
+    df["Time"] = pd.to_datetime(df["Time"], format="%b %d, %Y %I:%M:%S %p")
+    df.sort_values(by='Time', inplace=True)
+
+    df_24h,df_48h,weekly_slices = plots.makeTime(df)
 
     # Generate the plots
-    fig = plots.plotGlucose(df)
-    fig_car = plots.plotCarbohydrates(df)
+    fig = plots.plotGlucose(df,df_24h,df_48h,weekly_slices)
+    fig_car = plots.plotCarbohydrates(df,df_24h,df_48h,weekly_slices)
 
     # Convert figures to HTML for rendering in template
     graph_html = pio.to_html(fig, full_html=False)
