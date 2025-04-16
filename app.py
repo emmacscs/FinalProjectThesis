@@ -1,24 +1,27 @@
 from flask import Flask, render_template
 import plotly.io as pio
-import preprocessing, plots, harmonizing, kinetics
+import plots
+import os, json
+import pandas as pd
 
 app = Flask(__name__)
 
-# Preload data here before the app starts
-df = preprocessing.preprocess()
-df_24h, df_48h, weekly_slices = preprocessing.divide(df)
-df_har = harmonizing.harmonize(df_24h)  # Assuming df_24h is the result from preprocess
-df_kinetics = kinetics.run(df_har)
-fig = plots.plotGlucose(df,df_24h,df_48h,weekly_slices)
-fig_car = plots.plotCarbohydrates(df,df_24h,df_48h,weekly_slices)
 
 @app.route('/')
 def index():
+    data = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/insulin_carbs_absorption.csv"
+    df = pd.read_csv(data, sep=",")
+
+    # Generate the plots
+    fig = plots.plotGlucose(df)
+    fig_car = plots.plotCarbohydrates(df)
+
+    # Convert figures to HTML for rendering in template
     graph_html = pio.to_html(fig, full_html=False)
-    graphcar_html = pio.to_html(fig_car,full_html=False)
+    graphcar_html = pio.to_html(fig_car, full_html=False)
 
     return render_template('index.html', graph_html=graph_html,
                            graphcar_html=graphcar_html)
-    
+
 if __name__ == '__main__':
     app.run(debug=True)

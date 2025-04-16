@@ -4,21 +4,20 @@ def run(df_har):
     # Create a copy of df_har for the kinetics DataFrame
     df_kinetics = df_har.copy()
 
+    df_kinetics['Insulin absorption'] = pd.Series(dtype='float')
+
+    # Reset index, and set the start of the index to 1 instead of 0
+    df_kinetics.reset_index(drop=True, inplace=True)
+    df_kinetics.index += 1  # Add 1 to the index to start from 1
     # Constants for the Kinetics
     ka1 = 0.0164  # Absorption rate constant for nonmonomeric insulin (min^-1)
     ka2 = 0.0182  # Absorption rate constant for monomeric insulin (min^-1)
     kd = 0.0076   # Dissociation rate constant (min^-1)
 
-    df_kinetics['Insulin absorption'] = pd.Series(dtype='float')
     # Add the column for carbohydrate absorption
     df_kinetics['Carbs absorption'] = pd.Series(dtype='float')
 
-
-    # Reset index, and set the start of the index to 1 instead of 0
-    df_kinetics.reset_index(drop=True, inplace=True)
-    df_kinetics.index += 1  # Add 1 to the index to start from 1
-
-        # Loop to iterate through df_kinetics and calculate insulin absorption and carbohydrate absorption
+    # Loop to iterate through df_kinetics and calculate insulin absorption and carbohydrate absorption
     for i in range(1, len(df_kinetics)):
         # Initialize insulin concentrations for this interval
         I_scl1 = 0.25  # Initial nonmonomeric insulin concentration (subcutaneous space)
@@ -102,5 +101,10 @@ def run(df_har):
                 if C_scs < 0.1:  # Set threshold for negligible absorption
                     break
 
-    return df_kinetics
+    # Debugging: Check the DataFrame before saving to CSV
+    print(df_kinetics.tail())  # Make sure 'Insulin absorption' and 'Carbs absorption' are correctly calculated
 
+    # Save the resulting data to a CSV file
+    df_kinetics.to_csv('insulin_carbs_absorption.csv', sep='\t', index=False)
+
+    return df_kinetics
