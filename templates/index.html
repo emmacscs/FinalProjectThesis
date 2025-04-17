@@ -37,6 +37,25 @@
         </div>
     </nav>
     <h1>HOME PAGE</h1>
+      <!-- Display SHAP Values and other results -->
+      <h2>SHAP Values and Probabilities</h2>
+      <table>
+          <tr>
+              <th>Feature</th>
+              <th>SHAP Value for Hyperglycemia</th>
+              <th>Hyperglycemia Probability</th>
+              <th>Hypoglycemia Probability</th>
+          </tr>
+          {% for row in results %}
+          <tr>
+              <td>{{ row['Feature'] }}</td>
+              <td>{{ row['SHAP Value for Hyperglycemia'] }}</td>
+              <td>{{ row['Hyperglycemia Probability'] }}</td>
+              <td>{{ row['Hypoglycemia Probability'] }}</td>
+          </tr>
+          {% endfor %}
+      </table>
+
     
 
     <!-- Include your custom JavaScript -->

@@ -40,46 +40,59 @@
     <H1>PROFILE PAGE</H1>
 
 <!-- Section 1: Glucose Insights -->
-<div class="section-container">
-    <h2>Glucose Insights</h2>
+<div class="section-container glucose-section">
+    <h2 class="section-title">Glucose Insights</h2>
     <div class="text-container">
-        <p>Here you can see how your glucose levels fluctuate over time:</p>
+        <p class="section-description">Here you can see how your stress levels fluctuate over time:</p>
     </div>
-    <div id="plotly-chart-glucose">
+    <div id="plotly-chart-glucose" class="plot-container">
         {{ graph_html | safe }}
     </div>
 </div>
 
-<!-- Section 2: Carbohydrates -->
-<div class="section-container">
-    <h2>Carbohydrates Insights</h2>
+
+<!-- Section 2: Carbs Insights -->
+<div class="section-container carbs-section">
+    <h2 class="section-title">Carbohydrates Insights</h2>
     <div class="text-container">
-        <p>Here you can see your carbohydrate intake and its effect on glucose:</p>
+        <p class="section-description">Here you can see how your carbohydrates levels fluctuate over time:</p>
     </div>
-    <div id="plotly-chart-carbs">
+    <div id="plotly-chart-glucose" class="plot-container">
         {{ graphcar_html | safe }}
     </div>
 </div>
 
-    <!-- Section 2: Stress -->
-    <div class="section-container">
-        <h2>Stress Insights</h2>
-        <div class="text-container">
-            <p>Here you can see your stress intake and its effect on glucose:</p>
-        </div>
-        <div id="plotly-chart-carbs">
-            {{ graphstress | safe }}
-        </div>
+<!-- Section 3: Stress Insights -->
+<div class="section-container stress-section">
+    <h2 class="section-title">Stress Insights</h2>
+    <div class="text-container">
+        <p class="section-description">Here you can see how your glucose levels fluctuate over time:</p>
     </div>
+    <div id="plotly-chart-glucose" class="plot-container">
+        {{ graphstress | safe }}
+    </div>
+</div>
 
-     <!-- Section 2: Exercise -->
-     <div class="section-container">
-        <h2>Calories Insights</h2>
-        <div class="text-container">
-            <p>Here you can see your calories intake and its effect on glucose:</p>
-        </div>
-        <div id="plotly-chart-carbs">
-            {{ graphex | safe }}
-        </div>
+<!-- Section 4: Exercise Insights -->
+<div class="section-container exercise-section">
+    <h2 class="section-title">Exercise Insights</h2>
+    <div class="text-container">
+        <p class="section-description">Here you can see how your exercise levels fluctuate over time:</p>
     </div>
+    <div id="plotly-chart-glucose" class="plot-container">
+        {{ graphex | safe }}
+    </div>
+</div>
+
+<script>
+    window.onscroll = function() {
+        var navbar = document.querySelector('.navbar');
+        if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+            navbar.classList.add('compressed');
+        } else {
+            navbar.classList.remove('compressed');
+        }
+    };
+</script>
+
 </body>
