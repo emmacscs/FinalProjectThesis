@@ -13,14 +13,9 @@ def index():
     df = pd.read_csv(data, sep="\t")
     df['Time'] = pd.to_datetime(df['Time'], format='%Y-%m-%d %H:%M:%S')
     df_24h,df_48h,weekly_slices = plots.makeTime(df)
-
-    data2 = ""
-    results_df = pd.read_csv(data2,sep="\t")
-
-    results_dict = results_df.to_dict(orient="records")
-
+    
     # Pass the DataFrame and report to the template
-    return render_template('index.html', results=results_dict)
+    return render_template('index.html')
 
 @app.route('/profile.html')
 def profile():
