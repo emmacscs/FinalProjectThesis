@@ -3,44 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glucose Predictor</title>
-    
-    <!-- Include your custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    
-    <!-- Font Awesome for icons -->
-    <script src="https://kit.fontawesome.com/ff53837e9a.js" crossorigin="anonymous"></script>
-
-
+    <title>Modern Website</title>
+    <link rel="stylesheet" href="static/styles.css">
 </head>
 <body>
-    <!-- Navbar (Unchanged) -->
+
+    <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar__container">
-            <a href="/" id="navbar__logo"><i class="fa-solid fa-house-chimney-medical"></i>GLUCOSE PREDICTOR</a>
-            <div class="navbar__toggle" id="mobile-menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
+            <a href="index.html" class="navbar__logo">Glucose Predictor</a>
             <ul class="navbar__menu">
-                <li class="navbar__item">
-                    <a href="/index.html" class="navbar__links">Home</a>
-                </li>
-                <li class="navbar__item">
-                    <a href="/explorer.html" class="navbar__links">Explore</a>
-                </li>
-                <li class="navbar__btn">
-                    <a href="/profile.html" class="button">Profile</a>
-                </li>
+                <li><a href="index.html" class="navbar__links">Home</a></li>
+                <li><a href="explorer.html" class="navbar__links">Explorer</a></li>
+                <li><a href="profile.html" class="navbar__links">Profile</a></li>
             </ul>
         </div>
     </nav>
-    <h1>HOME PAGE</h1>
 
-    
+    <!-- Welcome Section -->
+    <section class="section-container home-section">
+        <h1>Welcome Sarah!</h1>
+        <p></p>
+        <p>This is the homepage where you can explore your latest Diabetes analysis!</p>
+        <p>If you wish to obtain article recommendations click on our Explorer page.</p>
+        <p>If you wish to take a closer look at your profile click on the Profile page.</p>
+    </section>
 
-    <!-- Include your custom JavaScript -->
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <!--Glucose Level Section-->
+    <section class="section-container glucose-section">
+        <h1>This is yout latest glucose data:</h1>
+        <div id="plotly-chart-glucose">
+            <!-- Embed the Plotly graph here -->
+            {{ graph_html | safe }}
+        </div>
+    </section>
+
 </body>
 </html>

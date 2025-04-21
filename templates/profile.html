@@ -3,96 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glucose Predictor</title>
-    
-    <!-- Include your custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    
-    <!-- Font Awesome for icons -->
-    <script src="https://kit.fontawesome.com/ff53837e9a.js" crossorigin="anonymous"></script>
-
+    <title>Profile</title>
+    <link rel="stylesheet" href="static/styles.css">
 </head>
-
 <body>
-    
-    <!-- Navbar (Unchanged) -->
+
+    <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar__container">
-            <a href="/" id="navbar__logo"><i class="fa-solid fa-house-chimney-medical"></i>GLUCOSE PREDICTOR</a>
-            <div class="navbar__toggle" id="mobile-menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
+            <a href="index.html" class="navbar__logo">MyWebsite</a>
             <ul class="navbar__menu">
-                <li class="navbar__item">
-                    <a href="/index.html" class="navbar__links">Home</a>
-                </li>
-                <li class="navbar__item">
-                    <a href="/explorer.html" class="navbar__links">Explore</a>
-                </li>
-                <li class="navbar__btn">
-                    <a href="/profile.html" class="button">Profile</a>
-                </li>
+                <li><a href="index.html" class="navbar__links">Home</a></li>
+                <li><a href="explorer.html" class="navbar__links">Explorer</a></li>
+                <li><a href="profile.html" class="navbar__links">Profile</a></li>
             </ul>
         </div>
     </nav>
-    <H1>PROFILE PAGE</H1>
 
-<!-- Section 1: Glucose Insights -->
-<div class="section-container glucose-section">
-    <h2 class="section-title">Glucose Insights</h2>
-    <div class="text-container">
-        <p class="section-description">Here you can see how your stress levels fluctuate over time:</p>
-    </div>
-    <div id="plotly-chart-glucose" class="plot-container">
-        {{ graph_html | safe }}
-    </div>
-</div>
-
-
-<!-- Section 2: Carbs Insights -->
-<div class="section-container carbs-section">
-    <h2 class="section-title">Carbohydrates Insights</h2>
-    <div class="text-container">
-        <p class="section-description">Here you can see how your carbohydrates levels fluctuate over time:</p>
-    </div>
-    <div id="plotly-chart-glucose" class="plot-container">
-        {{ graphcar_html | safe }}
-    </div>
-</div>
-
-<!-- Section 3: Stress Insights -->
-<div class="section-container stress-section">
-    <h2 class="section-title">Stress Insights</h2>
-    <div class="text-container">
-        <p class="section-description">Here you can see how your glucose levels fluctuate over time:</p>
-    </div>
-    <div id="plotly-chart-glucose" class="plot-container">
-        {{ graphstress | safe }}
-    </div>
-</div>
-
-<!-- Section 4: Exercise Insights -->
-<div class="section-container exercise-section">
-    <h2 class="section-title">Exercise Insights</h2>
-    <div class="text-container">
-        <p class="section-description">Here you can see how your exercise levels fluctuate over time:</p>
-    </div>
-    <div id="plotly-chart-glucose" class="plot-container">
-        {{ graphex | safe }}
-    </div>
-</div>
-
-<script>
-    window.onscroll = function() {
-        var navbar = document.querySelector('.navbar');
-        if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
-            navbar.classList.add('compressed');
-        } else {
-            navbar.classList.remove('compressed');
-        }
-    };
-</script>
+    <!-- Profile Section -->
+    <section class="section-container profile-section">
+        <h1>Your Profile</h1>
+        <p>Your profile content will be here soon!</p>
+    </section>
 
 </body>
+</html>
