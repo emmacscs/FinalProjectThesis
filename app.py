@@ -1,3 +1,4 @@
+import json
 from flask import Flask, jsonify, render_template, request
 import plotly.io as pio
 import plots
@@ -27,9 +28,43 @@ def index():
     exercise_html = pio.to_html(fig4, full_html=False)
     bpm_html = pio.to_html(fig5, full_html=False)
 
+    data2 = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/predicted_glucose_and_shap.csv"
+    df2 = pd.read_csv(data2)
+    df2['Timestamp'] = pd.to_datetime(df2['Timestamp'], format='%Y-%m-%d %H:%M:%S')
+    
+    # Now ensure that the Timestamp is set as an index, if you want to filter by timestamp
+    df2.set_index('Timestamp', inplace=True)
+
+    # Check if the desired timestamp exists in the DataFrame
+    timestamp = '2022-04-25 21:00:00'
+
+    # Convert to datetime to avoid any mismatches
+    timestamp = pd.to_datetime(timestamp)
+
+    # Extract the necessary values for rendering
+    predicted_glucose = df2['Predicted Glucose'].loc[timestamp]
+    predicted_class = df2['Predicted Class'].loc[timestamp]
+    predicted_probability_hyper = df2['Predicted Probability Hyper'].loc[timestamp]
+    predicted_probability_hypo = df2['Predicted Probability Hypo'].loc[timestamp]
+    shap_values = df2['SHAP Values'].loc[timestamp]
+
+    # Convert the SHAP values string (which is a list) into a Python list
+    shap_values = json.loads(shap_values)
+
+    # Calculate probabilities for hyperglycemia and hypoglycemia from model's prediction
+    hyperglycemia_prob = predicted_probability_hyper  # Model's probability for hyperglycemia (class 1)
+    hypoglycemia_prob = predicted_probability_hypo  # Complement for hypoglycemia (class 0)
+
+    # Get feature names for SHAP values
+    features = ['Carbohydrates', 'Rapid Insulin', 'Long Insulin', 'BPM', 'Calories', 'Distance', 'Stress', 'Insulin absorption', 'Carbs absorption']
+    
     
     # Pass the DataFrame and report to the template
-    return render_template('index.html',graph_html=graph_html,carbs_html=carbs_html,insulin_html=insulin_html,exercise_html=exercise_html,bpm_html=bpm_html)
+    return render_template('index.html',graph_html=graph_html,carbs_html=carbs_html,insulin_html=insulin_html,exercise_html=exercise_html,bpm_html=bpm_html,
+                           predicted_glucose=predicted_glucose, 
+                           hyperglycemia_prob=hyperglycemia_prob,
+                           hypoglycemia_prob=hypoglycemia_prob,
+                           shap_values=shap_values)
 
 
 @app.route('/profile.html')

@@ -5,106 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Glucose Predictor</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #F0FFF0;  /* Light aquamarine background */
-        }
-        .navbar {
-            background-color: #006D5B;
-            padding: 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .navbar__container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .navbar__logo {
-            color: #fff;
-            font-size: 2rem;
-            text-decoration: none;
-            font-weight: 700;
-        }
-        .section-container {
-            background-color: #F0FFF0;
-            padding: 40px;
-            margin: 20px 0;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-     
+    <link rel="stylesheet" href="static/styles.css">
 
-        /* Styling for the "Other Stats" button */
-        .toggle-btn {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            background-color: #006D5B;
-            color: white;
-            font-size: 18px;
-            padding: 10px 20px;
-            border-radius: 5px;
-            width: 200px;
-            margin: 20px auto;
-        }
-
-        .arrow {
-            margin-left: 10px;
-            transition: transform 0.3s ease;
-        }
-
-        .rotate {
-            transform: rotate(180deg);
-        }
-
-        /* Hidden sections */
-        .hidden-section {
-            display: none;
-        }
-          /* More space for the hidden sections */
-          #stats-section-1,
-        #stats-section-2,
-        #stats-section-3,
-        #stats-section-4 {
-            background-color: #F0FFF0;
-            padding: 40px;
-            margin: 20px 0;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        #popup-container {
-            display: none;
-            position: absolute;
-            top: 50px;
-            left: 50px;
-            background-color: white;
-            padding: 20px;
-            z-index: 10;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            border: 1px solid #ccc;
-            max-width: 300px;
-        }
-        #close-popup {
-            margin-top: 10px;
-            padding: 5px 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        #close-popup:hover {
-            background-color: #0056b3;
-        }
-
-
-
-    </style>
 </head>
 <body>
 
@@ -112,6 +14,11 @@
 <nav class="navbar">
     <div class="navbar__container">
         <a href="index.html" class="navbar__logo">Glucose Predictor</a>
+        <ul class="navbar__menu">
+            <li><a href="index.html" class="navbar__links">Home</a></li>
+            <li><a href="explorer.html" class="navbar__links">Explorer</a></li>
+            <li><a href="profile.html" class="navbar__links">Profile</a></li>
+        </ul>
     </div>
 </nav>
 
@@ -135,6 +42,24 @@
         <p id="popup-details">Click on a point on the graph to see the details here.</p>
     </div>
 </div>
+
+<h1>Next 15-Minute Glucose Prediction</h1>
+
+<div class="card">
+    <h2>Predicted Glucose Level</h2>
+    <p><strong>{{ predicted_glucose }}</strong> mg/dL</p>
+</div>
+
+<div class="card">
+    <h2>Hyperglycemia Prediction</h2>
+    <p>Probability of Hyperglycemia: <strong>{{ hyperglycemia_prob * 100 }}%</strong></p>
+</div>
+
+<div class="card">
+    <h2>Hypoglycemia Prediction</h2>
+    <p>Probability of Hypoglycemia: <strong>{{ hypoglycemia_prob * 100 }}%</strong></p>
+</div>
+
 
 
 </section>
