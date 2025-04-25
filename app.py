@@ -1,8 +1,11 @@
 import json
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, render_template
 import plotly.io as pio
 import plots
 import pandas as pd
+
+
+
 
 app = Flask(__name__)
 
@@ -19,7 +22,7 @@ def index():
     fig = plots.plotGlucose(df,df_24h,df_48h,weekly_slices)
     fig2 = plots.plotCarbs(df,df_24h,df_48h,weekly_slices)
     fig3 = plots.plotInsulin(df,df_24h,df_48h,weekly_slices)
-    fig4 = plots.plotGlucose(df,df_24h,df_48h,weekly_slices)
+    fig4 = plots.plotExercise(df,df_24h,df_48h,weekly_slices)
     fig5 = plots.plotBPM(df,df_24h,df_48h,weekly_slices)
     # Convert figures to HTML for rendering in template
     graph_html = pio.to_html(fig, full_html=False)
@@ -46,34 +49,14 @@ def index():
     predicted_class = df2['Predicted Class'].loc[timestamp]
     predicted_probability_hyper = df2['Predicted Probability Hyper'].loc[timestamp]
     predicted_probability_hypo = df2['Predicted Probability Hypo'].loc[timestamp]
-    shap_values = [
-    [ 1.08869346e-01, -1.08869346e-01],
-    [-1.32925794e-04,  1.32925794e-04],
-    [-6.38022423e-06,  6.38022423e-06],
-    [-1.80652684e-03,  1.80652684e-03],
-    [-2.87854145e-02,  2.87854145e-02],
-    [ 3.22096328e-02, -3.22096328e-02],
-    [-6.90545676e-02,  6.90545676e-02],
-    [ 4.59234038e-03, -4.59234038e-03],
-    [-5.19955947e-03,  5.19955947e-03]
-    ]
-
-    features = ['Carbohydrates', 'Rapid Insulin', 'Long Insulin', 'BPM', 'Calories', 'Distance', 'Stress', 'Insulin absorption', 'Carbs absorption']
-
-    influenceplot = plots.plotInfluence(features,shap_values)
-    influence_html = pio.to_html(influenceplot,full_html=False)
-
+   
     
     # Calculate probabilities for hyperglycemia and hypoglycemia from model's prediction
     hyperglycemia_prob = predicted_probability_hyper  # Model's probability for hyperglycemia (class 1)
     hypoglycemia_prob = predicted_probability_hypo  # Complement for hypoglycemia (class 0)
-
-    # Get feature names for SHAP values
-    features = ['Carbohydrates', 'Rapid Insulin', 'Long Insulin', 'BPM', 'Calories', 'Distance', 'Stress', 'Insulin absorption', 'Carbs absorption']
-    
-    
+  
     # Pass the DataFrame and report to the template
-    return render_template('index.html',graph_html=graph_html,carbs_html=carbs_html,insulin_html=insulin_html,exercise_html=exercise_html,bpm_html=bpm_html,influence_html=influence_html,
+    return render_template('index.html',graph_html=graph_html,carbs_html=carbs_html,insulin_html=insulin_html,exercise_html=exercise_html,bpm_html=bpm_html,
                            predicted_glucose=predicted_glucose, 
                            hyperglycemia_prob=hyperglycemia_prob,
                            hypoglycemia_prob=hypoglycemia_prob)

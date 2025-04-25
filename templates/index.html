@@ -61,18 +61,6 @@
     <p>Probability of Hypoglycemia: <strong>{{ hypoglycemia_prob * 100 }}%</strong></p>
 </div>
 
-<!-- Glucose Level Section -->
-<section class="section-container">
-    <h1>This is the features that got to that prediction:</h1>
-    <div id="plotly-chart-glucose">
-        <!-- Plotly Glucose Graph -->
-        {{ influence_html | safe }}
-    </div>
-
-</section>
-
-
-
 </section>
 
 
@@ -87,7 +75,7 @@
     <h2>Carbodydrates intake</h2>
     <!-- Content goes here -->
     <div id="plotly-chart-carbs">
-        <!-- Plotly Glucose Graph -->
+        <!-- Plotly carbs Graph -->
         {{ carbs_html | safe }}
     </div>
 </section>
@@ -96,7 +84,7 @@
     <h2>Insulin doses</h2>
     <!-- Content goes here -->
     <div id="plotly-chart-insulin">
-        <!-- Plotly Glucose Graph -->
+        <!-- Plotly insulin Graph -->
         {{ insulin_html | safe }}
     </div>
 </section>
@@ -105,7 +93,7 @@
     <h2>Exercise levels</h2>
     <!-- Content goes here -->
     <div id="plotly-chart-exercise">
-        <!-- Plotly Glucose Graph -->
+        <!-- Plotly calories Graph -->
         {{ exercise_html | safe }}
     </div>
 </section>
@@ -114,7 +102,7 @@
     <h2>BPM tracker</h2>
     <!-- Content goes here -->
     <div id="plotly-chart-bpm">
-        <!-- Plotly Glucose Graph -->
+        <!-- Plotly bpm Graph -->
         {{ bpm_html | safe }}
     </div>
 </section>
@@ -129,7 +117,7 @@
         const arrow = document.getElementById('arrow');
 
         // Toggle visibility of the sections
-        statsSection1.classList.toggle('hidden-section');
+        statsSection1.classList.toggle('section-container');
         statsSection2.classList.toggle('hidden-section');
         statsSection3.classList.toggle('hidden-section');
         statsSection4.classList.toggle('hidden-section');
