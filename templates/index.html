@@ -42,6 +42,7 @@
         <p id="popup-details">Click on a point on the graph to see the details here.</p>
     </div>
 </div>
+</section>
 
 <h1>Next 15-Minute Glucose Prediction</h1>
 
@@ -59,6 +60,16 @@
     <h2>Hypoglycemia Prediction</h2>
     <p>Probability of Hypoglycemia: <strong>{{ hypoglycemia_prob * 100 }}%</strong></p>
 </div>
+
+<!-- Glucose Level Section -->
+<section class="section-container">
+    <h1>This is the features that got to that prediction:</h1>
+    <div id="plotly-chart-glucose">
+        <!-- Plotly Glucose Graph -->
+        {{ influence_html | safe }}
+    </div>
+
+</section>
 
 
 

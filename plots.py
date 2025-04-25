@@ -310,3 +310,41 @@ def plotBPM(df, df_24h, df_48, weekly_slices):
     )
 
     return fig
+import plotly.graph_objects as go
+import ast
+
+def plotInfluence(features, influences):
+    # Convert the nested list of influences into two lists
+    influences = influences[0]  # Remove outer nesting
+    hypo = [i[1] for i in influences]  # Contribution to hypoglycemia
+    hyper = [i[0] for i in influences]  # Contribution to hyperglycemia
+
+    # Create a diverging bar chart
+    fig = go.Figure()
+
+    fig.add_trace(go.Bar(
+        y=features,
+        x=hypo,
+        name='Hypoglycemia Influence (1)',
+        orientation='h',
+        marker=dict(color='blue')
+    ))
+
+    fig.add_trace(go.Bar(
+        y=features,
+        x=[-x for x in hyper],
+        name='Hyperglycemia Influence (0)',
+        orientation='h',
+        marker=dict(color='red')
+    ))
+
+    fig.update_layout(
+        title='Feature Influence on Glycemia Prediction',
+        barmode='relative',
+        xaxis_title='Influence',
+        yaxis=dict(autorange="reversed"),  # So features are in order
+        legend=dict(x=0.7, y=1.1),
+        template='plotly_white'
+    )
+
+    return fig
