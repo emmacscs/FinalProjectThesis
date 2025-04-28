@@ -22,15 +22,13 @@
     </div>
 </nav>
 
-<h1>Hello Sarah!</h1>
-<p>Welcome to your personalized diabetes tracker</p>
-
 
 <!-- Glucose Level Section -->
 <section class="section-container">
     <h1>This is your latest glucose data:</h1>
     <p>When hovering over a point you will be able to see your data!</p>
     <p>Select a snippet of the graph to zoom in, double click to return to the original graph</p>
+    <p>Click on the dropbox to plot other data in comparison (a second axis appear on the right side)</p>
     <div id="plotly-chart-glucose">
         <!-- Plotly Glucose Graph -->
         {{ graph_html | safe }}
@@ -44,25 +42,13 @@
 </div>
 </section>
 
-<h1>Next 15-Minute Glucose Prediction</h1>
+<h1>Glucose Prediction</h1>
 
-<div class="card">
-    <h2>Predicted Glucose Level</h2>
-    <p><strong>{{ predicted_glucose }}</strong> mg/dL</p>
+<button class="prediction-btn" onclick="updatePredictions()">Show Predictions</button>
+
+<div class="predictions-container" id="predictions-container">
+    <!-- Predictions will be dynamically injected here -->
 </div>
-
-<div class="card">
-    <h2>Hyperglycemia Prediction</h2>
-    <p>Probability of Hyperglycemia: <strong>{{ hyperglycemia_prob * 100 }}%</strong></p>
-</div>
-
-<div class="card">
-    <h2>Hypoglycemia Prediction</h2>
-    <p>Probability of Hypoglycemia: <strong>{{ hypoglycemia_prob * 100 }}%</strong></p>
-</div>
-
-</section>
-
 
 <!-- "Other Stats" Section -->
 <div class="toggle-btn" onclick="toggleSections()">
@@ -130,6 +116,34 @@
 </script>
 
 
+<script>
+    function updatePredictions() {
+        const predictionsContainer = document.getElementById('predictions-container');
+
+        // Clear the current content
+        predictionsContainer.innerHTML = '';
+
+        // Create and append the prediction cards dynamically
+        const predictionData = [
+            { time: "15 min", glucose: 120, hyperglycemia: 0.15, hypoglycemia: 0.05 },
+            { time: "30 min", glucose: 120, hyperglycemia: 0.15, hypoglycemia: 0.05 },
+            { time: "1 hr", glucose: 135, hyperglycemia: 0.20, hypoglycemia: 0.03 },
+            { time: "2 hr", glucose: 140, hyperglycemia: 0.25, hypoglycemia: 0.02 }
+        ];
+
+        predictionData.forEach((data) => {
+            const card = document.createElement('div');
+            card.classList.add('prediction-card');
+            card.innerHTML = `
+                <h2>In ${data.time} </h2>
+                <p><strong>Expected glucose:</strong> ${data.glucose} mg/dL</p>
+                <p><strong>Hyperglycemia probability:</strong> ${(data.hyperglycemia * 100).toFixed(2)}%</p>
+                <p><strong>Hypoglycemia probability:</strong> ${(data.hypoglycemia * 100).toFixed(2)}%</p>
+            `;
+            predictionsContainer.appendChild(card);
+        });
+    }
+</script>
 
 
 

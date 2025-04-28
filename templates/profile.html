@@ -5,6 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <link rel="stylesheet" href="static/styles.css">
+    <style>
+        /* Adding basic styles for the profile page */
+        .section-container {
+            padding: 2rem;
+        }
+
+        .profile-section h1 {
+            text-align: left;
+            margin-bottom: 1rem;
+        }
+
+        .profile-section p {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .grid-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-item h3 {
+            margin-bottom: 10px;
+        }
+
+        .navbar__links {
+            margin: 0 10px;
+        }
+
+        /* Additional styling for profile content */
+        .profile-info {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+    </style>
 </head>
 <body>
 
@@ -23,7 +67,42 @@
     <!-- Profile Section -->
     <section class="section-container profile-section">
         <h1>Your Profile</h1>
-        <p>Your profile content will be here soon!</p>
+        <p>Welcome to your profile page! Here you can view and update your personal information and health details.</p>
+
+        <!-- Grid for Profile Information -->
+        <div class="grid-container">
+            <div class="grid-item">
+                <h3>Name</h3>
+                <p class="profile-info">John Doe</p>
+            </div>
+            <div class="grid-item">
+                <h3>Email</h3>
+                <p class="profile-info">johndoe@example.com</p>
+            </div>
+            <div class="grid-item">
+                <h3>Diabetes Type</h3>
+                <p class="profile-info">Type 2 Diabetes</p>
+            </div>
+            <div class="grid-item">
+                <h3>Age</h3>
+                <p class="profile-info">45</p>
+            </div>
+            <div class="grid-item">
+                <h3>Last Blood Sugar Level</h3>
+                <p class="profile-info">120 mg/dL</p>
+            </div>
+            <div class="grid-item">
+                <h3>Last HbA1c</h3>
+                <p class="profile-info">7.5%</p>
+            </div>
+        </div>
+
+        <!-- Section to Edit Profile (Optional) -->
+        <section class="edit-profile">
+            <h2>Edit Your Profile</h2>
+            <p>If you want to update your profile information, click the button below:</p>
+            <button onclick="window.location.href='edit-profile.html'">Edit Profile</button>
+        </section>
     </section>
 
 </body>
