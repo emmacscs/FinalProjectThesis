@@ -26,6 +26,13 @@ def makeTime(df):
 def plotGlucose(df, df_24h, df_48, weekly_slices):
     fig = go.Figure()
 
+    def get_visible_array(glucose_index=0, stat_index=None, n_weekly=len(weekly_slices)):
+        visible = [False] * (2 + n_weekly + 5)  # 2 base traces, n_weekly, 5 stats
+        visible[glucose_index] = True
+        if stat_index is not None:
+            visible[2 + n_weekly + stat_index] = True
+        return visible
+
     # Glucose zones (background)
     fig.add_shape(type="rect", x0=df['Time'].min(), x1=df['Time'].max(),
                   y0=-5, y1=3.9, fillcolor="pink", opacity=0.5, layer="below", line_width=0)
@@ -34,7 +41,7 @@ def plotGlucose(df, df_24h, df_48, weekly_slices):
     fig.add_shape(type="rect", x0=df['Time'].min(), x1=df['Time'].max(),
                   y0=10.01, y1=30, fillcolor="beige", opacity=0.5, layer="below", line_width=0)
 
-    # 24h trace for Glucose
+    # Glucose traces
     fig.add_trace(go.Scatter(
         x=df_24h['Time'],
         y=df_24h['Glucose'],
@@ -45,7 +52,6 @@ def plotGlucose(df, df_24h, df_48, weekly_slices):
         hovertemplate='Glucose: %{y}<br>Time: %{x}<br>Minutes since last carbs: %{customdata[0]:.2f}<br>Minutes since last insulin : %{customdata[1]}<extra></extra>'
     ))
 
-    # 48h trace for Glucose
     fig.add_trace(go.Scatter(
         x=df_48['Time'],
         y=df_48['Glucose'],
@@ -55,18 +61,6 @@ def plotGlucose(df, df_24h, df_48, weekly_slices):
         customdata=df_48[['Minutes since last Carbs', 'Minutes since last Insulin']].values,
         hovertemplate='Glucose: %{y}<br>Time: %{x}<br>Minutes since last carbs: %{customdata[0]:.2f}<br>Minutes since last insulin : %{customdata[1]}<extra></extra>'
     ))
-
-    # Weekly traces for Glucose
-    buttons = [
-        dict(label="24h", method="update", args=[
-            {"visible": [True] + [False]*(1 + len(weekly_slices))},
-            {"xaxis.range": [df_24h['Time'].min(), df_24h['Time'].max()]}
-        ]),
-        dict(label="48h", method="update", args=[
-            {"visible": [False, True] + [False]*len(weekly_slices)},
-            {"xaxis.range": [df_48['Time'].min(), df_48['Time'].max()]}
-        ])
-    ]
 
     for i, (label, df_w) in enumerate(weekly_slices):
         fig.add_trace(go.Scatter(
@@ -79,118 +73,77 @@ def plotGlucose(df, df_24h, df_48, weekly_slices):
             hovertemplate='Glucose: %{y}<br>Time: %{x}<br>Minutes since last carbs: %{customdata[0]:.2f}<br>Minutes since last insulin : %{customdata[1]}<extra></extra>'
         ))
 
-        button = dict(label=f"Week: {label}",
-                      method="update",
-                      args=[
-                          {"visible": [False, False] + [j == i for j in range(len(weekly_slices))]},
-                          {"xaxis.range": [df_w['Time'].min(), df_w['Time'].max()]}
-                      ])
-        buttons.append(button)
+    # Stats traces (Carbs, Insulin, Calories, Distance, BPM)
+    stats = [
+        ('Carbs', df_24h['Carbohydrates'], 'orange', 'Carbs: %{y}<br>Time: %{x}<extra></extra>'),
+        ('Insulin', df_24h['Rapid Insulin'], 'orange', 'Insulin: %{y}<br>Time: %{x}<extra></extra>'),
+        ('Calories', df_24h['Calories'], 'orange', 'Calories: %{y}<br>Time: %{x}<extra></extra>'),
+        ('Distance', df_24h['Distance'], 'orange', 'Distance: %{y}<br>Time: %{x}<extra></extra>'),
+        ('BPM', df_24h['BPM'], 'orange', 'BPM: %{y}<br>Time: %{x}<extra></extra>')
+    ]
 
-    # Adding stats traces (Carbs, Insulin, Calories, Distance, BPM)
-    # These stats will be plotted on top of the glucose line with a secondary Y-axis
+    for name, y_data, color, hover in stats:
+        fig.add_trace(go.Scatter(
+            x=df_24h['Time'],
+            y=y_data,
+            name=name,
+            visible=False,
+            mode='lines',
+            line=dict(color=color),
+            yaxis="y2",
+            hovertemplate=hover
+        ))
 
-    # Carbs trace (for stats)
-    fig.add_trace(go.Scatter(
-        x=df_24h['Time'],
-        y=df_24h['Carbohydrates'],
-        name='Insulin',
-        visible=False,
-        mode='lines',
-        line=dict(color='blue'),
-        yaxis="y2",  # Secondary y-axis
-        hovertemplate='Carbs: %{y}<br>Time: %{x}<extra></extra>'
-    ))
-
-    # Insulin trace (for stats)
-    fig.add_trace(go.Scatter(
-        x=df_24h['Time'],
-        y=df_24h['Rapid Insulin'],
-        name='Calories',
-        visible=False,
-        mode='lines',
-        line=dict(color='orange'),
-        yaxis="y2",  # Secondary y-axis
-        hovertemplate='Insulin: %{y}<br>Time: %{x}<extra></extra>'
-    ))
-
-    # Calories trace (for stats)
-    fig.add_trace(go.Scatter(
-        x=df_24h['Time'],
-        y=df_24h['Calories'],
-        name='Distance',
-        visible=False,
-        mode='lines',
-        line=dict(color='green'),
-        yaxis="y2",  # Secondary y-axis
-        hovertemplate='Calories: %{y}<br>Time: %{x}<extra></extra>'
-    ))
-
-    # Distance trace (for stats)
-    fig.add_trace(go.Scatter(
-        x=df_24h['Time'],
-        y=df_24h['Distance'],
-        name='BPM',
-        visible=False,
-        mode='lines',
-        line=dict(color='purple'),
-        yaxis="y2",  # Secondary y-axis
-        hovertemplate='Distance: %{y}<br>Time: %{x}<extra></extra>'
-    ))
-
-    # BPM trace (for stats)
-    fig.add_trace(go.Scatter(
-        x=df_24h['Time'],
-        y=df_24h['BPM'],
-        name='BPM',
-        visible=False,
-        mode='lines',
-        line=dict(color='red'),
-        yaxis="y2",  # Secondary y-axis
-        hovertemplate='BPM: %{y}<br>Time: %{x}<extra></extra>'
-    ))
-
-    # Dropdown for time range selection (24h, 48h, Weekly)
+    # Dropdowns
     time_buttons = [
         dict(label="24h", method="update", args=[
-            {"visible": [True] + [False]*(1 + len(weekly_slices)) + [False]*5},  # Show only glucose
+            {"visible": get_visible_array(glucose_index=0)},
             {"xaxis.range": [df_24h['Time'].min(), df_24h['Time'].max()]}
         ]),
         dict(label="48h", method="update", args=[
-            {"visible": [False, True] + [False]*len(weekly_slices) + [False]*5},  # Show only glucose
+            {"visible": get_visible_array(glucose_index=1)},
             {"xaxis.range": [df_48['Time'].min(), df_48['Time'].max()]}
         ])
     ]
 
-    # Dropdown for selecting stats (Carbs, Insulin, Calories, Distance, BPM)
+    for i, (label, df_w) in enumerate(weekly_slices):
+        time_buttons.append(dict(
+            label=f"Week: {label}",
+            method="update",
+            args=[
+                {"visible": get_visible_array(glucose_index=2 + i)},
+                {"xaxis.range": [df_w['Time'].min(), df_w['Time'].max()]}
+            ]
+        ))
+
     stat_buttons = [
         dict(label="--extra statistics--", method="update", args=[
-            {"visible": [True, False] + [False]*(1 + len(weekly_slices)) +  [False]*5},  # Show Carbs
-            {"yaxis.title": "Glucose (mmol/L)", "yaxis2.title": "Carbs (g)"}
+            {"visible": get_visible_array(glucose_index=0)},
+            {"yaxis.title": "Glucose (mmol/L)", "yaxis2.title": ""}
         ]),
         dict(label="Carbs", method="update", args=[
-            {"visible": [True, False] + [False]*(1 + len(weekly_slices)) +  [True] + [False]*4},  # Show Carbs
+            {"visible": get_visible_array(glucose_index=0, stat_index=0)},
             {"yaxis.title": "Glucose (mmol/L)", "yaxis2.title": "Carbs (g)"}
         ]),
         dict(label="Insulin", method="update", args=[
-            {"visible": [True, False] + [False]*(1 + len(weekly_slices)) + [False] + [True] + [False]*3},  # Show Insulin
+            {"visible": get_visible_array(glucose_index=0, stat_index=1)},
             {"yaxis.title": "Glucose (mmol/L)", "yaxis2.title": "Insulin (units)"}
         ]),
         dict(label="Calories", method="update", args=[
-            {"visible": [True, False] + [False]*(1 + len(weekly_slices)) + [False] + [False] + [True]  + [False]*2},  # Show Calories
+            {"visible": get_visible_array(glucose_index=0, stat_index=2)},
             {"yaxis.title": "Glucose (mmol/L)", "yaxis2.title": "Calories (kcal)"}
         ]),
         dict(label="Distance", method="update", args=[
-            {"visible": [True, False] + [False]*(1 + len(weekly_slices)) +[False] + [False] + [False] + [True] + [False]},  # Show Distance
+            {"visible": get_visible_array(glucose_index=0, stat_index=3)},
             {"yaxis.title": "Glucose (mmol/L)", "yaxis2.title": "Distance (km)"}
         ]),
         dict(label="BPM", method="update", args=[
-            {"visible": [True, False] + [False]*(1 + len(weekly_slices)) + [False] + [False] + [False] + [False] + [True]},  # Show BPM
+            {"visible": get_visible_array(glucose_index=0, stat_index=4)},
             {"yaxis.title": "Glucose (mmol/L)", "yaxis2.title": "BPM (beats per minute)"}
         ])
     ]
 
-    # Update layout with the dropdown buttons
+    # Layout
     fig.update_layout(
         updatemenus=[
             dict(
@@ -199,7 +152,7 @@ def plotGlucose(df, df_24h, df_48, weekly_slices):
                 x=0.05,
                 y=1.15,
                 showactive=True,
-                buttons=time_buttons  # Time selection buttons
+                buttons=time_buttons
             ),
             dict(
                 type="dropdown",
@@ -207,7 +160,7 @@ def plotGlucose(df, df_24h, df_48, weekly_slices):
                 x=0.2,
                 y=1.15,
                 showactive=True,
-                buttons=stat_buttons  # Stats selection buttons
+                buttons=stat_buttons
             ),
         ],
         title="Glucose Trends - Time Explorer",

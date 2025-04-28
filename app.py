@@ -4,9 +4,6 @@ import plotly.io as pio
 import plots
 import pandas as pd
 
-
-
-
 app = Flask(__name__)
 
 data = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/final.csv"
@@ -31,8 +28,11 @@ def index():
     exercise_html = pio.to_html(fig4, full_html=False)
     bpm_html = pio.to_html(fig5, full_html=False)
 
+
     data2 = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/predicted_glucose_and_shap.csv"
+    shap_path = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/shap_values_per_interval.csv"
     df2 = pd.read_csv(data2)
+    df_shap = pd.read_csv(shap_path)
     df2['Timestamp'] = pd.to_datetime(df2['Timestamp'], format='%Y-%m-%d %H:%M:%S')
     
     # Now ensure that the Timestamp is set as an index, if you want to filter by timestamp
@@ -87,3 +87,5 @@ def explore():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
