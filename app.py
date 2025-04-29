@@ -105,7 +105,33 @@ def index2():
     predicted_class = df2['Predicted Class'].loc[timestamp]
     predicted_probability_hyper = df2['Predicted Probability Hyper'].loc[timestamp]
     predicted_probability_hypo = df2['Predicted Probability Hypo'].loc[timestamp]
-   
+
+  
+    # Create a new DataFrame for extracted hyper and hypo values
+    intervals = []
+    hyper_values = []
+    hypo_values = []
+
+    for index, row in df.iterrows():
+        interval = row['Interval']
+        shap_values = plots.parse_shap_values(row['SHAP Values'])
+        
+        for feature_idx, (hyper, hypo) in enumerate(shap_values):
+            intervals.append(interval)
+            hyper_values.append(hyper)
+            hypo_values.append(hypo)
+
+    # Create a new DataFrame with the extracted values
+    shap_df = pd.DataFrame({
+        "Interval": intervals,
+        "Feature Index": [i for i in range(len(intervals))],  # A unique index for each feature per interval
+        "Hyper Value": hyper_values,
+        "Hypo Value": hypo_values
+    })
+
+    # You can generate HTML from this DataFrame using pandas
+    html_shaptable = shap_df.to_html(classes="table", index=False)
+    
     
     # Calculate probabilities for hyperglycemia and hypoglycemia from model's prediction
     hyperglycemia_prob = predicted_probability_hyper  # Model's probability for hyperglycemia (class 1)
@@ -115,6 +141,7 @@ def index2():
     return render_template('index.html',graph_html=graph_html,carbs_html=carbs_html,insulin_html=insulin_html,exercise_html=exercise_html,bpm_html=bpm_html,
                            predicted_glucose=predicted_glucose, 
                            hyperglycemia_prob=hyperglycemia_prob,
+                           html_shaptable=html_shaptable,
                            hypoglycemia_prob=hypoglycemia_prob)
 
 

@@ -205,12 +205,28 @@ p {
   #stats-section-1,
 #stats-section-2,
 #stats-section-3,
-#stats-section-4 {
+#stats-section-4{
     background-color: #F0FFF0;
     padding: 40px;
     margin: 20px 0;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table th, .table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+.table th {
+    background-color: #f2f2f2;
 }
 
 #popup-container {

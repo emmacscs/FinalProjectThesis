@@ -1,3 +1,4 @@
+import ast
 import plotly.graph_objects as go
 import pandas as pd
 
@@ -149,3 +150,14 @@ def plotGlucose(df, df_24h, df_48, weekly_slices):
     )
 
     return fig
+
+
+# Function to parse the SHAP values
+def parse_shap_values(shap_str):
+    # Convert the string to a list using ast.literal_eval for safe evaluation
+    shap_list = ast.literal_eval(shap_str)
+    # Flatten and extract the per-feature values (hyper/hypo)
+    flattened_values = []
+    for feature_set in shap_list[0]:  # Assuming the outer list contains the feature sets
+        flattened_values.append(feature_set)
+    return flattened_values
