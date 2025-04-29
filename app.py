@@ -1,7 +1,7 @@
 import json
 from flask import Flask, render_template
 import plotly.io as pio
-import plots
+import plots, otherstats
 import pandas as pd
 
 app = Flask(__name__)
@@ -17,10 +17,10 @@ def index():
 
     # Generate the plots
     fig = plots.plotGlucose(df,df_24h,df_48h,weekly_slices)
-    fig2 = plots.plotCarbs(df,df_24h,df_48h,weekly_slices)
-    fig3 = plots.plotInsulin(df,df_24h,df_48h,weekly_slices)
-    fig4 = plots.plotExercise(df,df_24h,df_48h,weekly_slices)
-    fig5 = plots.plotBPM(df,df_24h,df_48h,weekly_slices)
+    fig2 = otherstats.plotCarbs(df,df_24h,df_48h,weekly_slices)
+    fig3 = otherstats.plotInsulin(df,df_24h,df_48h,weekly_slices)
+    fig4 = otherstats.plotExercise(df,df_24h,df_48h,weekly_slices)
+    fig5 = otherstats.plotBPM(df,df_24h,df_48h,weekly_slices)
     # Convert figures to HTML for rendering in template
     graph_html = pio.to_html(fig, full_html=False)
     carbs_html = pio.to_html(fig2, full_html=False)
@@ -73,10 +73,10 @@ def index2():
 
     # Generate the plots
     fig = plots.plotGlucose(df,df_24h,df_48h,weekly_slices)
-    fig2 = plots.plotCarbs(df,df_24h,df_48h,weekly_slices)
-    fig3 = plots.plotInsulin(df,df_24h,df_48h,weekly_slices)
-    fig4 = plots.plotExercise(df,df_24h,df_48h,weekly_slices)
-    fig5 = plots.plotBPM(df,df_24h,df_48h,weekly_slices)
+    fig2 = otherstats.plotCarbs(df,df_24h,df_48h,weekly_slices)
+    fig3 = otherstats.plotInsulin(df,df_24h,df_48h,weekly_slices)
+    fig4 = otherstats.plotExercise(df,df_24h,df_48h,weekly_slices)
+    fig5 = otherstats.plotBPM(df,df_24h,df_48h,weekly_slices)
     # Convert figures to HTML for rendering in template
     graph_html = pio.to_html(fig, full_html=False)
     carbs_html = pio.to_html(fig2, full_html=False)

@@ -27,17 +27,11 @@
 <section class="section-container">
     <h1>This is your latest glucose data:</h1>
     <p>When hovering over a point you will be able to see your data!</p>
-    <p>Select a snippet of the graph to zoom in, double click to return to the original graph</p>
-    <p>Click on the dropbox to plot other data in comparison (a second axis appear on the right side)</p>
+    <p>Select a snippet of the graph to zoom in, double click to return to the original graph.</p>
+    <p>Click on the dropbox to plot other data in comparison (a second axis will appear on the right side)</p>
     <div id="plotly-chart-glucose">
         <!-- Plotly Glucose Graph -->
         {{ graph_html | safe }}
-    </div>
-     <!-- Pop-up container (initially hidden) -->
-     <div id="popup-container">
-        <button id="close-popup">Close</button>
-        <p><strong>Clicked Point Details:</strong></p>
-        <p id="popup-details">Click on a point on the graph to see the details here.</p>
     </div>
 </div>
 </section>
@@ -125,7 +119,7 @@
 
         // Create and append the prediction cards dynamically
         const predictionData = [
-            { time: "15 min", glucose: 120, hyperglycemia: 0.15, hypoglycemia: 0.05 },
+            { time: "15 min", glucose: 5.85, hyperglycemia: 0.2, hypoglycemia: 0.8 },
             { time: "30 min", glucose: 120, hyperglycemia: 0.15, hypoglycemia: 0.05 },
             { time: "1 hr", glucose: 135, hyperglycemia: 0.20, hypoglycemia: 0.03 },
             { time: "2 hr", glucose: 140, hyperglycemia: 0.25, hypoglycemia: 0.02 }
