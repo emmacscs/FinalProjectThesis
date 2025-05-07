@@ -39,7 +39,7 @@ def index():
     df2.set_index('Timestamp', inplace=True)
 
     # Check if the desired timestamp exists in the DataFrame
-    timestamp = '2022-04-25 21:00:00'
+    timestamp = '2021-12-28 23:45:00'
 
     # Convert to datetime to avoid any mismatches
     timestamp = pd.to_datetime(timestamp)
