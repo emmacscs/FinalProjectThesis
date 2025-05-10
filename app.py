@@ -1,7 +1,7 @@
 import json
 from flask import Flask, render_template
 import plotly.io as pio
-import plots, otherstats
+import plots, otherstats, explainerplot
 import pandas as pd
 
 app = Flask(__name__)
@@ -21,12 +21,16 @@ def index():
     fig3 = otherstats.plotInsulin(df,df_24h,df_48h,weekly_slices)
     fig4 = otherstats.plotExercise(df,df_24h,df_48h,weekly_slices)
     fig5 = otherstats.plotBPM(df,df_24h,df_48h,weekly_slices)
+
+    fig6 = explainerplot.plotExplainer(df,'2021-12-28 21:45:00','2021-12-28 23:45:00')
     # Convert figures to HTML for rendering in template
     graph_html = pio.to_html(fig, full_html=False)
     carbs_html = pio.to_html(fig2, full_html=False)
     insulin_html = pio.to_html(fig3, full_html=False)
     exercise_html = pio.to_html(fig4, full_html=False)
     bpm_html = pio.to_html(fig5, full_html=False)
+
+    explanation_html = pio.to_html(fig6, full_html=False)
 
 
     data2 = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/predicted_glucose_and_shap.csv"
@@ -37,6 +41,13 @@ def index():
     
     # Now ensure that the Timestamp is set as an index, if you want to filter by timestamp
     df2.set_index('Timestamp', inplace=True)
+
+    # Load the CSV
+    df_expl = pd.read_csv("C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/influential_and_insulin_event.csv")
+
+    # Extract the latest (or first, or any index you want) SHAP explanation
+    # For example: get the most recent explanation (last row)
+    explanation = df_expl['SHAP Explanation'].iloc[0]
 
     # Check if the desired timestamp exists in the DataFrame
     timestamp = '2021-12-28 23:45:00'
@@ -56,7 +67,8 @@ def index():
     hypoglycemia_prob = predicted_probability_hypo  # Complement for hypoglycemia (class 0)
   
     # Pass the DataFrame and report to the template
-    return render_template('index.html',graph_html=graph_html,carbs_html=carbs_html,insulin_html=insulin_html,exercise_html=exercise_html,bpm_html=bpm_html,
+    return render_template('index.html',graph_html=graph_html,carbs_html=carbs_html,insulin_html=insulin_html,exercise_html=exercise_html,bpm_html=bpm_html,explanation_html=explanation_html,
+                           explanation=explanation,
                            predicted_glucose=predicted_glucose, 
                            hyperglycemia_prob=hyperglycemia_prob,
                            hypoglycemia_prob=hypoglycemia_prob)

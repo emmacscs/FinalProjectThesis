@@ -38,7 +38,23 @@
 
 <h1>Glucose Prediction</h1>
 
-<button class="prediction-btn" onclick="updatePredictions()">Show Predictions</button>
+<div class="button-group">
+    <button class="prediction-btn" onclick="updatePredictions()">Show Predictions</button>
+    <button class="prediction-btn" onclick="openExplanationModal()">Show Explanation</button>
+</div>
+
+<!-- Explanation Modal -->
+<div id="explanation-modal" class="modal hidden-section">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeExplanationModal()">&times;</span>
+        <h2>Explanation of Prediction</h2>
+        <div id="explanation-graph">
+            {{ explanation_html | safe }}
+        </div>
+        <p>{{ explanation }}</p>
+    </div>
+</div>
+
 
 <div class="predictions-container" id="predictions-container">
     <!-- Predictions will be dynamically injected here -->
@@ -139,6 +155,17 @@
         });
     }
 </script>
+
+<script>
+    function openExplanationModal() {
+        document.getElementById('explanation-modal').classList.remove('hidden-section');
+    }
+
+    function closeExplanationModal() {
+        document.getElementById('explanation-modal').classList.add('hidden-section');
+    }
+</script>
+
 
 
 
