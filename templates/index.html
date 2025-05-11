@@ -6,7 +6,6 @@
     <title>Glucose Predictor</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <link rel="stylesheet" href="static/styles.css">
-
 </head>
 <body>
 
@@ -22,7 +21,6 @@
     </div>
 </nav>
 
-
 <!-- Glucose Level Section -->
 <section class="section-container">
     <h1>This is your latest glucose data:</h1>
@@ -33,31 +31,58 @@
         <!-- Plotly Glucose Graph -->
         {{ graph_html | safe }}
     </div>
-</div>
 </section>
 
 <h1>Glucose Prediction</h1>
 
 <div class="button-group">
     <button class="prediction-btn" onclick="updatePredictions()">Show Predictions</button>
-    <button class="prediction-btn" onclick="openExplanationModal()">Show Explanation</button>
 </div>
 
-<!-- Explanation Modal -->
-<div id="explanation-modal" class="modal hidden-section">
+<div class="predictions-container" id="predictions-container">
+    <!-- Predictions and explanation buttons will be dynamically injected here -->
+</div>
+
+<!-- Explanation Modals (one per interval) -->
+<div id="explanation-modal-15" class="modal hidden-section">
     <div class="modal-content">
-        <span class="close-button" onclick="closeExplanationModal()">&times;</span>
-        <h2>Explanation of Prediction</h2>
-        <div id="explanation-graph">
+        <span class="close-button" onclick="closeExplanationModal('15')">&times;</span>
+        <h2>Explanation of 15 min Prediction</h2>
+        <div id="explanation-graph-15">
             {{ explanation_html | safe }}
         </div>
         <p>{{ explanation }}</p>
     </div>
 </div>
-
-
-<div class="predictions-container" id="predictions-container">
-    <!-- Predictions will be dynamically injected here -->
+<div id="explanation-modal-30" class="modal hidden-section">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeExplanationModal('30')">&times;</span>
+        <h2>Explanation of 30 min Prediction</h2>
+        <div id="explanation-graph-30">
+            {{ explanation_html | safe }}
+        </div>
+        <p>{{ explanation }}</p>
+    </div>
+</div>
+<div id="explanation-modal-60" class="modal hidden-section">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeExplanationModal('60')">&times;</span>
+        <h2>Explanation of 1 hr Prediction</h2>
+        <div id="explanation-graph-60">
+            {{ explanation_html | safe }}
+        </div>
+        <p>{{ explanation }}</p>
+    </div>
+</div>
+<div id="explanation-modal-120" class="modal hidden-section">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeExplanationModal('120')">&times;</span>
+        <h2>Explanation of 2 hr Prediction</h2>
+        <div id="explanation-graph-120">
+            {{ explanation_html | safe }}
+        </div>
+        <p>{{ explanation }}</p>
+    </div>
 </div>
 
 <!-- "Other Stats" Section -->
@@ -66,108 +91,72 @@
     <span class="arrow" id="arrow">↓</span>
 </div>
 
-<!-- Hidden Sections that will be shown after clicking "Other Stats" -->
 <section id="stats-section-1" class="hidden-section section-container">
     <h2>Carbodydrates intake</h2>
-    <!-- Content goes here -->
     <div id="plotly-chart-carbs">
-        <!-- Plotly carbs Graph -->
         {{ carbs_html | safe }}
     </div>
 </section>
 
 <section id="stats-section-2" class="hidden-section section-container">
     <h2>Insulin doses</h2>
-    <!-- Content goes here -->
     <div id="plotly-chart-insulin">
-        <!-- Plotly insulin Graph -->
         {{ insulin_html | safe }}
     </div>
 </section>
 
 <section id="stats-section-3" class="hidden-section section-container">
     <h2>Exercise levels</h2>
-    <!-- Content goes here -->
     <div id="plotly-chart-exercise">
-        <!-- Plotly calories Graph -->
         {{ exercise_html | safe }}
     </div>
 </section>
 
 <section id="stats-section-4" class="hidden-section section-container">
     <h2>BPM tracker</h2>
-    <!-- Content goes here -->
-
-        {{ bpm_html | safe }}
-    
+    {{ bpm_html | safe }}
 </section>
 
-
-
 <script>
-    // Function to toggle the display of the additional sections
     function toggleSections() {
-        const statsSection1 = document.getElementById('stats-section-1');
-        const statsSection2 = document.getElementById('stats-section-2');
-        const statsSection3 = document.getElementById('stats-section-3');
-        const statsSection4 = document.getElementById('stats-section-4');
+        const sections = [1, 2, 3, 4].map(i => document.getElementById(`stats-section-${i}`));
         const arrow = document.getElementById('arrow');
-
-        // Toggle visibility of the sections
-        statsSection1.classList.toggle('hidden-section');
-        statsSection2.classList.toggle('hidden-section');
-        statsSection3.classList.toggle('hidden-section');
-        statsSection4.classList.toggle('hidden-section');
-
-        // Toggle the arrow rotation
+        sections.forEach(sec => sec.classList.toggle('hidden-section'));
         arrow.classList.toggle('rotate');
     }
- 
 
-</script>
-
-
-<script>
     function updatePredictions() {
         const predictionsContainer = document.getElementById('predictions-container');
-
-        // Clear the current content
         predictionsContainer.innerHTML = '';
 
-        // Create and append the prediction cards dynamically
         const predictionData = [
-            { time: "15 min", glucose: 5.85, hyperglycemia: 0.2, hypoglycemia: 0.8 },
-            { time: "30 min", glucose: 120, hyperglycemia: 0.15, hypoglycemia: 0.05 },
-            { time: "1 hr", glucose: 135, hyperglycemia: 0.20, hypoglycemia: 0.03 },
-            { time: "2 hr", glucose: 140, hyperglycemia: 0.25, hypoglycemia: 0.02 }
+            { time: "15 min", hyperglycemia: 0.89, hypoglycemia: 0.11, interval: "15" },
+            { time: "30 min", hyperglycemia: 0.915, hypoglycemia: 0.0849, interval: "30" },
+            { time: "1 hr", hyperglycemia: 0.8925, hypoglycemia: 0.1075, interval: "60" },
+            { time: "2 hr", hyperglycemia: 0.645, hypoglycemia: 0.3550, interval: "120" }
         ];
 
         predictionData.forEach((data) => {
             const card = document.createElement('div');
             card.classList.add('prediction-card');
             card.innerHTML = `
-                <h2>In ${data.time} </h2>
-                <p><strong>Expected glucose:</strong> ${data.glucose} mg/dL</p>
+                <h2>In ${data.time}</h2>
                 <p><strong>Hyperglycemia probability:</strong> ${(data.hyperglycemia * 100).toFixed(2)}%</p>
                 <p><strong>Hypoglycemia probability:</strong> ${(data.hypoglycemia * 100).toFixed(2)}%</p>
+                <button class="prediction-btn" onclick="openExplanationModal('${data.interval}')">Show Explanation</button>
             `;
             predictionsContainer.appendChild(card);
         });
     }
-</script>
 
-<script>
-    function openExplanationModal() {
-        document.getElementById('explanation-modal').classList.remove('hidden-section');
+    function openExplanationModal(interval) {
+        document.getElementById(`explanation-modal-${interval}`).classList.remove('hidden-section');
     }
 
-    function closeExplanationModal() {
-        document.getElementById('explanation-modal').classList.add('hidden-section');
+    function closeExplanationModal(interval) {
+        document.getElementById(`explanation-modal-${interval}`).classList.add('hidden-section');
     }
 </script>
-
-
-
 
 </body>
 </html>
