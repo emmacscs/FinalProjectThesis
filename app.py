@@ -5,7 +5,7 @@ import plots, otherstats, explainerplot
 import pandas as pd
 from flask_frozen import Freezer
 
-app = Flask(__name__, template_folder='.')  # This tells Flask to look in the current directory
+app = Flask(__name__)  # This tells Flask to look in the current directory
 
 data = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/final.csv"
 df = pd.read_csv(data, sep="\t")
@@ -69,7 +69,7 @@ def index():
   
     # Pass the DataFrame and report to the template
     return render_template('index.html',graph_html=graph_html,carbs_html=carbs_html,insulin_html=insulin_html,exercise_html=exercise_html,bpm_html=bpm_html,explanation_html=explanation_html,
-                           explanation="hello world",
+                           explanation= explanation,
                            predicted_glucose=predicted_glucose, 
                            hyperglycemia_prob=hyperglycemia_prob,
                            hypoglycemia_prob=hypoglycemia_prob)
