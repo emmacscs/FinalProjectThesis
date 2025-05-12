@@ -69,7 +69,7 @@ def index():
   
     # Pass the DataFrame and report to the template
     return render_template('index.html',graph_html=graph_html,carbs_html=carbs_html,insulin_html=insulin_html,exercise_html=exercise_html,bpm_html=bpm_html,explanation_html=explanation_html,
-                           explanation=explanation,
+                           explanation="hello world",
                            predicted_glucose=predicted_glucose, 
                            hyperglycemia_prob=hyperglycemia_prob,
                            hypoglycemia_prob=hypoglycemia_prob)
