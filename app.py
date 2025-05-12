@@ -75,12 +75,6 @@ def index():
                            hypoglycemia_prob=hypoglycemia_prob)
 
 
-@app.route('/profile.html')
-def profile():
-
-    return render_template('profile.html')
-
-
 @app.route('/index.html')
 def index2():
 
@@ -142,11 +136,6 @@ def index2():
                            hyperglycemia_prob=hyperglycemia_prob,
                            hypoglycemia_prob=hypoglycemia_prob)
 
-
-@app.route('/explorer.html')
-def explore():
-    
-    return render_template('explorer.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
