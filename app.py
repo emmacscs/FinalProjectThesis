@@ -25,13 +25,13 @@ def index():
 
     fig6 = explainerplot.plotExplainer(df,'2021-12-28 21:45:00','2021-12-28 23:45:00')
     # Convert figures to HTML for rendering in template
-    graph_html = pio.to_html(fig, full_html=False)
-    carbs_html = pio.to_html(fig2, full_html=False)
-    insulin_html = pio.to_html(fig3, full_html=False)
-    exercise_html = pio.to_html(fig4, full_html=False)
-    bpm_html = pio.to_html(fig5, full_html=False)
+    graph_html = pio.to_html(fig, full_html=True)
+    carbs_html = pio.to_html(fig2, full_html=True)
+    insulin_html = pio.to_html(fig3, full_html=True)
+    exercise_html = pio.to_html(fig4, full_html=True)
+    bpm_html = pio.to_html(fig5, full_html=True)
 
-    explanation_html = pio.to_html(fig6, full_html=False)
+    explanation_html = pio.to_html(fig6, full_html=True)
 
 
     data2 = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/predicted_glucose_and_shap.csv"
@@ -93,13 +93,13 @@ def index2():
 
     fig6 = explainerplot.plotExplainer(df,'2021-12-28 21:45:00','2021-12-28 23:45:00')
     # Convert figures to HTML for rendering in template
-    graph_html = pio.to_html(fig, full_html=False)
-    carbs_html = pio.to_html(fig2, full_html=False)
-    insulin_html = pio.to_html(fig3, full_html=False)
-    exercise_html = pio.to_html(fig4, full_html=False)
-    bpm_html = pio.to_html(fig5, full_html=False)
+    graph_html = pio.to_html(fig, full_html=True)
+    carbs_html = pio.to_html(fig2, full_html=True)
+    insulin_html = pio.to_html(fig3, full_html=True)
+    exercise_html = pio.to_html(fig4, full_html=True)
+    bpm_html = pio.to_html(fig5, full_html=True)
 
-    explanation_html = pio.to_html(fig6, full_html=False)
+    explanation_html = pio.to_html(fig6, full_html=True)
 
 
     data2 = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/predicted_glucose_and_shap.csv"
