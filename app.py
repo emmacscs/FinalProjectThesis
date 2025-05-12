@@ -5,7 +5,7 @@ import plots, otherstats, explainerplot
 import pandas as pd
 from flask_frozen import Freezer
 
-app = Flask(__name__)  # This tells Flask to look in the current directory
+app = Flask(__name__,template_folder='')  # This tells Flask to look in the current directory
 
 data = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/final.csv"
 df = pd.read_csv(data, sep="\t")
