@@ -95,7 +95,7 @@ def plotExplainer(df, date_x, date_y):
                 buttons=stat_buttons
             ),
         ],
-        title=f"Glucose and Contextual Factors between {date_x} and {date_y}",
+        title=f"Explainer graph",
         xaxis_title="Time",
         yaxis_title="Glucose (mmol/L)",
         plot_bgcolor="white",

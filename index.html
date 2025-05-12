@@ -370,31 +370,16 @@ p {
     <!-- Predictions and explanation buttons will be dynamically injected here -->
 </div>
 
+<!-- Show Explanation Button (Outside of Prediction Cards) -->
+<div id="show-explanation-btn-container">
+    <button class="prediction-btn" onclick="openExplanationModal()">Show Explanation</button>
+</div>
+
 <!-- Explanation Modals (one per interval) -->
-<div id="explanation-modal-15" class="modal hidden-section">
-    <div class="modal-content">
-        <span class="close-button" onclick="closeExplanationModal('15')">&times;</span>
-        <h2>Explanation of 15 min Prediction</h2>
-        <div id="explanation-graph-15">
-            {{ explanation_html | safe }}
-        </div>
-        <p>{{ explanation }}</p>
-    </div>
-</div>
-<div id="explanation-modal-30" class="modal hidden-section">
-    <div class="modal-content">
-        <span class="close-button" onclick="closeExplanationModal('30')">&times;</span>
-        <h2>Explanation of 30 min Prediction</h2>
-        <div id="explanation-graph-30">
-            {{ explanation_html | safe }}
-        </div>
-        <p>{{ explanation }}</p>
-    </div>
-</div>
 <div id="explanation-modal-60" class="modal hidden-section">
     <div class="modal-content">
         <span class="close-button" onclick="closeExplanationModal('60')">&times;</span>
-        <h2>Explanation of 1 hr Prediction</h2>
+        <h2>Explanation of the predictions</h2>
         <div id="explanation-graph-60">
             {{ explanation_html | safe }}
         </div>
@@ -404,7 +389,7 @@ p {
 <div id="explanation-modal-120" class="modal hidden-section">
     <div class="modal-content">
         <span class="close-button" onclick="closeExplanationModal('120')">&times;</span>
-        <h2>Explanation of 2 hr Prediction</h2>
+        <h2>Explanation of 2 hours Prediction</h2>
         <div id="explanation-graph-120">
             {{ explanation_html | safe }}
         </div>
@@ -451,16 +436,15 @@ p {
         sections.forEach(sec => sec.classList.toggle('hidden-section'));
         arrow.classList.toggle('rotate');
     }
+    let selectedInterval = "60";  // Default to 1 hour
 
     function updatePredictions() {
         const predictionsContainer = document.getElementById('predictions-container');
-        predictionsContainer.innerHTML = '';
+        predictionsContainer.innerHTML = ''; // Clear existing predictions
 
         const predictionData = [
-            { time: "15 min", hyperglycemia: 0.89, hypoglycemia: 0.11, interval: "15" },
-            { time: "30 min", hyperglycemia: 0.915, hypoglycemia: 0.0849, interval: "30" },
-            { time: "1 hr", hyperglycemia: 0.8925, hypoglycemia: 0.1075, interval: "60" },
-            { time: "2 hr", hyperglycemia: 0.645, hypoglycemia: 0.3550, interval: "120" }
+            { time: "1 hour", hyperglycemia: 0.8925, hypoglycemia: 0.1075, interval: "60" },
+            { time: "2 hours", hyperglycemia: 0.645, hypoglycemia: 0.3550, interval: "120" }
         ];
 
         predictionData.forEach((data) => {
@@ -470,20 +454,26 @@ p {
                 <h2>In ${data.time}</h2>
                 <p><strong>Hyperglycemia probability:</strong> ${(data.hyperglycemia * 100).toFixed(2)}%</p>
                 <p><strong>Hypoglycemia probability:</strong> ${(data.hypoglycemia * 100).toFixed(2)}%</p>
-                <button class="prediction-btn" onclick="openExplanationModal('${data.interval}')">Show Explanation</button>
             `;
             predictionsContainer.appendChild(card);
         });
     }
 
-    function openExplanationModal(interval) {
-        document.getElementById(`explanation-modal-${interval}`).classList.remove('hidden-section');
+    // Open the explanation modal for the selected interval
+    function openExplanationModal() {
+        document.getElementById(`explanation-modal-${selectedInterval}`).classList.remove('hidden-section');
     }
 
+    // Close the explanation modal
     function closeExplanationModal(interval) {
         document.getElementById(`explanation-modal-${interval}`).classList.add('hidden-section');
     }
-</script>
 
+    // Function to update the selected interval and show explanation for it
+    function setSelectedInterval(interval) {
+        selectedInterval = interval;
+    }
+
+    </script>
 </body>
 </html>
