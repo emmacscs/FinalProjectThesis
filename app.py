@@ -3,8 +3,10 @@ from flask import Flask, render_template
 import plotly.io as pio
 import plots, otherstats, explainerplot
 import pandas as pd
+from flask_frozen import Freezer
 
 app = Flask(__name__)
+freezer = Freezer(app)
 
 data = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/final.csv"
 df = pd.read_csv(data, sep="\t")
@@ -151,3 +153,6 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 
+# Freeze the app
+if __name__ == '__main__':
+    freezer.freeze()
