@@ -1,44 +1,52 @@
 import pandas as pd
 import plotly.graph_objects as go
 
-def plotGlucose(df):
-    # Extract last 24 hours
-    latest_time = df['Time'].max()
-    df_24h = df[df['Time'] >= (latest_time - pd.Timedelta(hours=24))].copy()
+def plotGlucose(df, selected_day=None):
+    # Convert to datetime if not already
+    df['Time'] = pd.to_datetime(df['Time'])
+
+    # Filter to selected day (if any), otherwise default to last 24h
+    if selected_day:
+        day_df = df[df['Time'].dt.date == selected_day.date()].copy()
+        title_suffix = selected_day.strftime("%A, %d %B %Y")
+    else:
+        latest_time = df['Time'].max()
+        day_df = df[df['Time'] >= (latest_time - pd.Timedelta(hours=24))].copy()
+        title_suffix = "Last 24 Hours"
 
     fig = go.Figure()
 
     # Background zones
-    fig.add_shape(type="rect", x0=df_24h['Time'].min(), x1=df_24h['Time'].max(),
+    fig.add_shape(type="rect", x0=day_df['Time'].min(), x1=day_df['Time'].max(),
                   y0=-5, y1=3.9, fillcolor="pink", opacity=0.5, layer="below", line_width=0)
-    fig.add_shape(type="rect", x0=df_24h['Time'].min(), x1=df_24h['Time'].max(),
+    fig.add_shape(type="rect", x0=day_df['Time'].min(), x1=day_df['Time'].max(),
                   y0=3.9, y1=10, fillcolor="lightgreen", opacity=0.5, layer="below", line_width=0)
-    fig.add_shape(type="rect", x0=df_24h['Time'].min(), x1=df_24h['Time'].max(),
+    fig.add_shape(type="rect", x0=day_df['Time'].min(), x1=day_df['Time'].max(),
                   y0=10.01, y1=30, fillcolor="beige", opacity=0.5, layer="below", line_width=0)
 
     # Glucose trace
     fig.add_trace(go.Scatter(
-        x=df_24h['Time'],
-        y=df_24h['Glucose'],
+        x=day_df['Time'],
+        y=day_df['Glucose'],
         name='Glucose',
         visible=True,
         mode='lines',
-        customdata=df_24h[['Minutes since last Carbs', 'Minutes since last Insulin']].values,
+        customdata=day_df[['Minutes since last Carbs', 'Minutes since last Insulin']].values,
         hovertemplate='Glucose: %{y}<br>Time: %{x}<br>Minutes since last meal: %{customdata[0]:.2f}<br>Minutes since last insulin : %{customdata[1]}<extra></extra>'
     ))
 
     # Extra stats
     stats = [
-        ('Carbs', df_24h['Carbohydrates'], 'orange', 'Carbs: %{y}<br>Time: %{x}<extra></extra>'),
-        ('Insulin', df_24h['Rapid Insulin'] + df_24h['Long Insulin'], 'purple', 'Insulin: %{y}<br>Time: %{x}<extra></extra>'),
-        ('Calories', df_24h['Calories'], 'black', 'Calories: %{y}<br>Time: %{x}<extra></extra>'),
-        ('Distance', df_24h['Distance'], 'green', 'Distance: %{y}<br>Time: %{x}<extra></extra>'),
-        ('BPM', df_24h['BPM'], 'red', 'BPM: %{y}<br>Time: %{x}<extra></extra>')
+        ('Carbs', day_df['Carbohydrates'], 'orange', 'Carbs: %{y}<br>Time: %{x}<extra></extra>'),
+        ('Insulin', day_df['Rapid Insulin'] + day_df['Long Insulin'], 'purple', 'Insulin: %{y}<br>Time: %{x}<extra></extra>'),
+        ('Calories', day_df['Calories'], 'black', 'Calories: %{y}<br>Time: %{x}<extra></extra>'),
+        ('Distance', day_df['Distance'], 'green', 'Distance: %{y}<br>Time: %{x}<extra></extra>'),
+        ('BPM', day_df['BPM'], 'red', 'BPM: %{y}<br>Time: %{x}<extra></extra>')
     ]
 
     for name, y_data, color, hover in stats:
         fig.add_trace(go.Scatter(
-            x=df_24h['Time'],
+            x=day_df['Time'],
             y=y_data,
             name=name,
             visible=False,
@@ -78,7 +86,7 @@ def plotGlucose(df):
             showactive=True,
             buttons=buttons
         )],
-        title="Glucose Trends - Last 24 Hours",
+        title=f"Glucose Trends – {title_suffix}",
         xaxis_title="Time",
         yaxis_title="Glucose (mmol/L)",
         yaxis2=dict(
@@ -88,8 +96,8 @@ def plotGlucose(df):
             showgrid=False
         ),
         plot_bgcolor="white",
-        xaxis_range=[df_24h['Time'].min(), df_24h['Time'].max()],
-        yaxis_range=[-5, max(df_24h['Glucose'].max(), 15)],
+        xaxis_range=[day_df['Time'].min(), day_df['Time'].max()],
+        yaxis_range=[-5, max(day_df['Glucose'].max(), 15)],
         showlegend=True
     )
 
