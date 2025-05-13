@@ -1,141 +1,77 @@
-import json
-from flask import Flask, render_template
-import plotly.io as pio
-import plots, otherstats, explainerplot
+import streamlit as st
 import pandas as pd
-from flask_frozen import Freezer
+import plots, otherstats, explainerplot
 
-app = Flask(__name__,template_folder='')  # This tells Flask to look in the current directory
+# Set page config
+st.set_page_config(page_title="T1D Glucose Dashboard", layout="wide", page_icon="💉")
 
-data = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/final.csv"
-df = pd.read_csv(data, sep="\t")
+# Custom green background styling
+st.markdown("""
+    <style>
+        body {
+            background-color: #e8f5e9;
+        }
+        .stApp {
+            background-color: #e8f5e9;
+        }
+        .block-container {
+            padding-top: 2rem;
+        }
+        h1, h2, h3, .stMetricValue {
+            color: #2e7d32;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# --- Load Data ---
+df = pd.read_csv("C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/final.csv", sep="\t")
 df['Time'] = pd.to_datetime(df['Time'], format='%Y-%m-%d %H:%M:%S')
-df_24h,df_48h,weekly_slices = plots.makeTime(df)
+df_24h, df_48h, weekly_slices = plots.makeTime(df)
 
+df2 = pd.read_csv("C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/predicted_glucose_and_shap.csv")
+df2['Timestamp'] = pd.to_datetime(df2['Timestamp'])
+df2.set_index('Timestamp', inplace=True)
 
-@app.route('/')
-def index():
+df_expl = pd.read_csv("C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/influential_and_insulin_event.csv")
+explanation = df_expl['SHAP Explanation'].iloc[0]
 
-    # Generate the plots
-    fig = plots.plotGlucose(df,df_24h,df_48h,weekly_slices)
-    fig2 = otherstats.plotCarbs(df,df_24h,df_48h,weekly_slices)
-    fig3 = otherstats.plotInsulin(df,df_24h,df_48h,weekly_slices)
-    fig4 = otherstats.plotExercise(df,df_24h,df_48h,weekly_slices)
-    fig5 = otherstats.plotBPM(df,df_24h,df_48h,weekly_slices)
+timestamp = pd.to_datetime("2021-12-28 23:45:00")
+predicted_glucose = float(df2.loc[timestamp, "Predicted Glucose"])
+predicted_probability_hyper = float(df2.loc[timestamp, "Predicted Probability Hyper"])
+predicted_probability_hypo = float(df2.loc[timestamp, "Predicted Probability Hypo"])
 
-    fig6 = explainerplot.plotExplainer(df,'2021-12-28 21:45:00','2021-12-28 23:45:00')
-    # Convert figures to HTML for rendering in template
-    graph_html = pio.to_html(fig, full_html=True)
-    carbs_html = pio.to_html(fig2, full_html=True)
-    insulin_html = pio.to_html(fig3, full_html=True)
-    exercise_html = pio.to_html(fig4, full_html=True)
-    bpm_html = pio.to_html(fig5, full_html=True)
+# --- Page Layout ---
+st.title("🌿 Type 1 Diabetes Glucose Dashboard")
 
-    explanation_html = pio.to_html(fig6, full_html=True)
+st.markdown("##### Prediction for 2021-12-28 23:45:00")
+col1, col2, col3 = st.columns(3)
+col1.metric("Predicted Glucose", f"{predicted_glucose:.2f} mmol/L")
+col2.metric("Hyperglycemia Risk", f"{predicted_probability_hyper:.1%}")
+col3.metric("Hypoglycemia Risk", f"{predicted_probability_hypo:.1%}")
 
+st.markdown("### 🔍 Model Explanation")
+st.code(explanation)
 
-    data2 = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/predicted_glucose_and_shap.csv"
-    shap_path = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/shap_values_per_interval.csv"
-    df2 = pd.read_csv(data2)
-    df_shap = pd.read_csv(shap_path)
-    df2['Timestamp'] = pd.to_datetime(df2['Timestamp'], format='%Y-%m-%d %H:%M:%S')
-    
-    # Now ensure that the Timestamp is set as an index, if you want to filter by timestamp
-    df2.set_index('Timestamp', inplace=True)
+# --- Plots Section ---
+tab1, tab2, tab3 = st.tabs(["📈 Glucose & Vitals", "🍎 Carbs & Insulin", "🧠 Explanation"])
 
-    # Load the CSV
-    df_expl = pd.read_csv("C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/influential_and_insulin_event.csv")
+with tab1:
+    st.subheader("Glucose Trends")
+    st.plotly_chart(plots.plotGlucose(df, df_24h, df_48h, weekly_slices), use_container_width=True)
 
-    # Extract the latest (or first, or any index you want) SHAP explanation
-    # For example: get the most recent explanation (last row)
-    explanation = df_expl['SHAP Explanation'].iloc[0]
+    st.subheader("Heart Rate")
+    st.plotly_chart(otherstats.plotBPM(df, df_24h, df_48h, weekly_slices), use_container_width=True)
 
-    # Check if the desired timestamp exists in the DataFrame
-    timestamp = '2021-12-28 23:45:00'
+    st.subheader("Exercise Events")
+    st.plotly_chart(otherstats.plotExercise(df, df_24h, df_48h, weekly_slices), use_container_width=True)
 
-    # Convert to datetime to avoid any mismatches
-    timestamp = pd.to_datetime(timestamp)
+with tab2:
+    st.subheader("Carbohydrate Intake")
+    st.plotly_chart(otherstats.plotCarbs(df, df_24h, df_48h, weekly_slices), use_container_width=True)
 
-    # Extract the necessary values for rendering
-    predicted_glucose = df2['Predicted Glucose'].loc[timestamp]
-    predicted_class = df2['Predicted Class'].loc[timestamp]
-    predicted_probability_hyper = df2['Predicted Probability Hyper'].loc[timestamp]
-    predicted_probability_hypo = df2['Predicted Probability Hypo'].loc[timestamp]
-   
-    
-    # Calculate probabilities for hyperglycemia and hypoglycemia from model's prediction
-    hyperglycemia_prob = predicted_probability_hyper  # Model's probability for hyperglycemia (class 1)
-    hypoglycemia_prob = predicted_probability_hypo  # Complement for hypoglycemia (class 0)
-  
-    # Pass the DataFrame and report to the template
-    return render_template('index.html',graph_html=graph_html,carbs_html=carbs_html,insulin_html=insulin_html,exercise_html=exercise_html,bpm_html=bpm_html,explanation_html=explanation_html,
-                           explanation= explanation,
-                           predicted_glucose=predicted_glucose, 
-                           hyperglycemia_prob=hyperglycemia_prob,
-                           hypoglycemia_prob=hypoglycemia_prob)
+    st.subheader("Insulin Injections")
+    st.plotly_chart(otherstats.plotInsulin(df, df_24h, df_48h, weekly_slices), use_container_width=True)
 
-
-@app.route('/index.html')
-def index2():
-
-    #    # Generate the plots
-    fig = plots.plotGlucose(df,df_24h,df_48h,weekly_slices)
-    fig2 = otherstats.plotCarbs(df,df_24h,df_48h,weekly_slices)
-    fig3 = otherstats.plotInsulin(df,df_24h,df_48h,weekly_slices)
-    fig4 = otherstats.plotExercise(df,df_24h,df_48h,weekly_slices)
-    fig5 = otherstats.plotBPM(df,df_24h,df_48h,weekly_slices)
-
-    fig6 = explainerplot.plotExplainer(df,'2021-12-28 21:45:00','2021-12-28 23:45:00')
-    # Convert figures to HTML for rendering in template
-    graph_html = pio.to_html(fig, full_html=True)
-    carbs_html = pio.to_html(fig2, full_html=True)
-    insulin_html = pio.to_html(fig3, full_html=True)
-    exercise_html = pio.to_html(fig4, full_html=True)
-    bpm_html = pio.to_html(fig5, full_html=True)
-
-    explanation_html = pio.to_html(fig6, full_html=True)
-
-
-    data2 = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/predicted_glucose_and_shap.csv"
-    shap_path = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/shap_values_per_interval.csv"
-    df2 = pd.read_csv(data2)
-    df_shap = pd.read_csv(shap_path)
-    df2['Timestamp'] = pd.to_datetime(df2['Timestamp'], format='%Y-%m-%d %H:%M:%S')
-    
-    # Now ensure that the Timestamp is set as an index, if you want to filter by timestamp
-    df2.set_index('Timestamp', inplace=True)
-
-    # Load the CSV
-    df_expl = pd.read_csv("C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/influential_and_insulin_event.csv")
-
-    # Extract the latest (or first, or any index you want) SHAP explanation
-    # For example: get the most recent explanation (last row)
-    explanation = df_expl['SHAP Explanation'].iloc[0]
-
-    # Check if the desired timestamp exists in the DataFrame
-    timestamp = '2021-12-28 23:45:00'
-
-    # Convert to datetime to avoid any mismatches
-    timestamp = pd.to_datetime(timestamp)
-
-    # Extract the necessary values for rendering
-    predicted_glucose = df2['Predicted Glucose'].loc[timestamp]
-    predicted_class = df2['Predicted Class'].loc[timestamp]
-    predicted_probability_hyper = df2['Predicted Probability Hyper'].loc[timestamp]
-    predicted_probability_hypo = df2['Predicted Probability Hypo'].loc[timestamp]
-   
-    
-    # Calculate probabilities for hyperglycemia and hypoglycemia from model's prediction
-    hyperglycemia_prob = predicted_probability_hyper  # Model's probability for hyperglycemia (class 1)
-    hypoglycemia_prob = predicted_probability_hypo  # Complement for hypoglycemia (class 0)
-  
-    # Pass the DataFrame and report to the template
-    return render_template('index.html',graph_html=graph_html,carbs_html=carbs_html,insulin_html=insulin_html,exercise_html=exercise_html,bpm_html=bpm_html,explanation_html=explanation_html,
-                           explanation=explanation,
-                           predicted_glucose=predicted_glucose, 
-                           hyperglycemia_prob=hyperglycemia_prob,
-                           hypoglycemia_prob=hypoglycemia_prob)
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+with tab3:
+    st.subheader("SHAP Explanation Plot")
+    st.plotly_chart(explainerplot.plotExplainer(df, "2021-12-28 21:45:00", "2021-12-28 23:45:00"), use_container_width=True)
