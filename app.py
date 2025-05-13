@@ -26,7 +26,7 @@ st.set_page_config(page_title="Glucose Predictor", layout="centered")
 apply_global_styles()
 
 # Load your data
-data_path = "C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/final.csv"
+data_path = "final.csv"
 df = pd.read_csv(data_path, sep="\t")
 df['Time'] = pd.to_datetime(df['Time'], format='%Y-%m-%d %H:%M:%S')
 
@@ -44,7 +44,7 @@ st.markdown(f"**🕒 Current Time:** {timestamp}")
 
 
 # Load prediction & SHAP data
-pred_df = pd.read_csv("C:/Users/emmxc/OneDrive/Escritorio/thesis/FinalProjectThesis/testings/predicted_glucose_and_shap.csv")
+pred_df = pd.read_csv("predicted_glucose_and_shap.csv")
 pred_df['Timestamp'] = pd.to_datetime(pred_df['Timestamp'])
 
 # Focus on a specific timestamp (e.g., "2021-12-28 23:45:00")
