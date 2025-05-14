@@ -29,7 +29,7 @@ df = pd.read_csv("final.csv",sep="\t")
 df['Time'] = pd.to_datetime(df['Time'], format='%Y-%m-%d %H:%M:%S')
 
 # Dummy prediction info
-timestamp = "2021-12-28 23:45:00"
+datestamp = "2021-12-28 23:45:00"
 predicted_glucose = 9.82
 hyper_prob = 0.73
 hypo_prob = 0.05
@@ -38,12 +38,12 @@ explanation_shap = "The high probability of hyperglycemic episode is due to your
 
 # App layout
 st.title("🌿Glucose Predictor")
-st.markdown(f"**Current Time:** {timestamp}")
+st.markdown(f"**Current Time:** {datestamp}")
 
 
 # Load prediction & SHAP data
-pred_df = pd.read_csv("predicted_glucose_and_shap.csv",sep="\t")
-pred_df['Timestamp'] = pd.to_datetime(pred_df['Timestamp'])
+pred_df = pd.read_csv("predicted_glucose_and_shap.csv",sep=",")
+pred_df['Timestamp'] = pd.to_datetime(pred_df['Timestamp'], format='%Y-%m-%d %H:%M:%S')
 
 # Focus on a specific timestamp (e.g., "2021-12-28 23:45:00")
 target_time = pd.to_datetime("2021-12-28 23:45:00")
