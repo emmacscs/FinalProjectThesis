@@ -27,7 +27,7 @@ apply_global_styles()
 
 # Load your data
 data_path = "final.csv"
-df = pd.read_csv(data_path, sep="")
+df = pd.read_csv(data_path)
 df['Time'] = pd.to_datetime(df['Time'], format='%Y-%m-%d %H:%M:%S')
 
 # Dummy prediction info
