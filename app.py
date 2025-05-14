@@ -25,9 +25,7 @@ def apply_global_styles():
 st.set_page_config(page_title="Glucose Predictor", layout="centered")
 apply_global_styles()
 
-# Load your data
-data_path = "final.csv"
-df = pd.read_csv(data_path)
+df = pd.read_csv("final.csv")
 df['Time'] = pd.to_datetime(df['Time'], format='%Y-%m-%d %H:%M:%S')
 
 # Dummy prediction info
@@ -40,7 +38,7 @@ explanation_shap = "The high probability of hyperglycemic episode is due to your
 
 # App layout
 st.title("🌿Glucose Predictor")
-st.markdown(f"**🕒 Current Time:** {timestamp}")
+st.markdown(f"** Current Time:** {timestamp}")
 
 
 # Load prediction & SHAP data
@@ -72,7 +70,7 @@ filtered_days = recent_days[recent_days < latest_day]
 
 # Dropdown for day selection
 selected_day = st.selectbox(
-    "📅 Choose a day to explore",
+    " Choose a day to explore",
     options=[None] + list(filtered_days),
     format_func=lambda x: "Last 24 Hours" if x is None else x.strftime("%A, %d %B")
 )
@@ -89,8 +87,8 @@ st.code(explanation_shap)
 
 # Insight Section
 st.markdown("---")
-if st.button("🧠 Insight into Explanation"):
-    st.markdown("### 🧪 Explainer Graph")
+if st.button(" Insight into Explanation"):
+    st.markdown("###  Explainer Graph")
 
     # Define the 2-hour window for the explainer (you can make this dynamic later)
     date_x = pd.to_datetime("2021-12-28 20:45:00")
