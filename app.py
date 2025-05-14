@@ -38,7 +38,7 @@ explanation_shap = "The high probability of hyperglycemic episode is due to your
 
 # App layout
 st.title("🌿Glucose Predictor")
-st.markdown(f"** Current Time:** {timestamp}")
+st.markdown(f"**Current Time:** {timestamp}")
 
 
 # Load prediction & SHAP data
@@ -70,7 +70,7 @@ filtered_days = recent_days[recent_days < latest_day]
 
 # Dropdown for day selection
 selected_day = st.selectbox(
-    " Choose a day to explore",
+    "Choose a day to explore",
     options=[None] + list(filtered_days),
     format_func=lambda x: "Last 24 Hours" if x is None else x.strftime("%A, %d %B")
 )
@@ -87,7 +87,7 @@ st.code(explanation_shap)
 
 # Insight Section
 st.markdown("---")
-if st.button(" Insight into Explanation"):
+if st.button("Insight into Explanation"):
     st.markdown("###  Explainer Graph")
 
     # Define the 2-hour window for the explainer (you can make this dynamic later)
