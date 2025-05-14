@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import datetime
-import plots,otherstats,explainerplot  # assuming you saved the updated function in plots.py
+import plots,otherstats,explainerplot  
 
 def apply_global_styles():
     st.markdown("""
