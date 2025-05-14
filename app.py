@@ -25,7 +25,7 @@ def apply_global_styles():
 st.set_page_config(page_title="Glucose Predictor", layout="centered")
 apply_global_styles()
 
-df = pd.read_csv("final.csv")
+df = pd.read_csv("final.csv",sep="\t")
 df['Time'] = pd.to_datetime(df['Time'], format='%Y-%m-%d %H:%M:%S')
 
 # Dummy prediction info
@@ -42,7 +42,7 @@ st.markdown(f"** Current Time:** {timestamp}")
 
 
 # Load prediction & SHAP data
-pred_df = pd.read_csv("predicted_glucose_and_shap.csv")
+pred_df = pd.read_csv("predicted_glucose_and_shap.csv",sep="\t")
 pred_df['Timestamp'] = pd.to_datetime(pred_df['Timestamp'])
 
 # Focus on a specific timestamp (e.g., "2021-12-28 23:45:00")
