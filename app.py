@@ -34,7 +34,14 @@ predicted_glucose = 9.82
 hyper_prob = 0.73
 hypo_prob = 0.05
 explanation_gen = "The high probability of an hyperglycemic episode is due to your behavior in the last two hours."
-explanation_shap = "The high probability of hyperglycemic episode is due to your Long Insulin injection at time 2021-12-28 23:00:00."
+explanation_shap = "The high probability of hyperglycemic episode is due to:" \
+"                     - your Long Insulin injection at time 2021-12-28 23:00:00." \
+"                     - your Carbohydrates ingestion at time 2021-12-28 22:00:00." \
+"                     - From 'insulin' and 'carbohydrates' you need to remember:" \
+"                           - The insulin dose should be taken 10-15 minutes before the meal" \
+"                           -   Taking it too late increases post-meal glucose spikes." \
+"                           -   Taking it too early can cause hypoglycemia if the person delays eating."
+
 
 # App layout
 st.title("🌿Glucose Predictor")

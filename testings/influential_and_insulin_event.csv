@@ -1,2 +1,2 @@
 SHAP Most Influential Time,Insulin Dose,Generic Explanation,SHAP Explanation
-2021-12-28 23:15:00,"{'Time': Timestamp('2021-12-28 23:00:00'), 'Value': 15.0}",The high probability of an hypoglycemic episode is due to your behavior in the last two hours,The high probability of hypoglycemic episode is due to your Long Insulin injection at time 2021-12-28 23:00:00.
+2021-12-28 23:15:00,"{'Time': Timestamp('2021-12-28 23:00:00'), 'Value': 15.0}",The high probability of an hypoglycemic episode is due to your behavior in the last two hours,The high probability of hypoglycemic episode is due to: your Long Insulin injection at time 2021-12-28 23:00:00.
