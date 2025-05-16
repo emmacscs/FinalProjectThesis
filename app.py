@@ -25,22 +25,40 @@ def apply_global_styles():
 st.set_page_config(page_title="Glucose Predictor", layout="centered")
 apply_global_styles()
 
-df = pd.read_csv("final.csv",sep="\t")
+df = pd.read_csv("kinetics.csv",sep="\t")
 df['Time'] = pd.to_datetime(df['Time'], format='%Y-%m-%d %H:%M:%S')
+
+df_XAI = pd.read_csv("XAI_detailed.csv",sep=",")
+df_XAI['Time'] = pd.to_datetime(df_XAI['Time'], format='%Y-%m-%d %H:%M:%S')
 
 # Dummy prediction info
 datestamp = "2021-12-28 23:45:00"
-predicted_glucose = 9.82
-hyper_prob = 0.73
-hypo_prob = 0.05
+hyper_prob = 0.84
+hypo_prob = 0.12
 explanation_gen = "The high probability of an hyperglycemic episode is due to your behavior in the last two hours."
-explanation_shap = "The high probability of hyperglycemic episode is due to:" \
-"                     - your Long Insulin injection at time 2021-12-28 23:00:00." \
-"                     - your Carbohydrates ingestion at time 2021-12-28 22:00:00." \
-"                     - From 'insulin' and 'carbohydrates' you need to remember:" \
-"                           - The insulin dose should be taken 10-15 minutes before the meal" \
-"                           -   Taking it too late increases post-meal glucose spikes." \
-"                           -   Taking it too early can cause hypoglycemia if the person delays eating."
+hyper_explanations = df_XAI[
+    (df_XAI["Prediction"] == "Hyperglycemia") &
+    (df_XAI["Explanation"].notna()) &
+    (df_XAI["Explanation"].str.contains("Influence"))
+]["Explanation"].tolist()
+
+# Add contextual insight if available
+general_extras = df_XAI[
+    (df_XAI["Prediction"] == "General") &
+    (df_XAI["Extra_Explanation"] == "✓ Contextual Insight")
+]["Explanation"].tolist()
+
+# Format the explanation text
+explanation_shap = "🧠 **Explanation of Hyperglycemia Risk:**\n"
+explanation_shap += "The high probability of a hyperglycemic episode is likely due to:\n"
+
+for line in hyper_explanations:
+    explanation_shap += f"  • {line}\n"
+
+if general_extras:
+    explanation_shap += "\n🔎 **Important Contextual Insights:**\n"
+    for insight in general_extras:
+        explanation_shap += f"  • {insight}\n"
 
 
 # App layout
@@ -48,23 +66,26 @@ st.title("🌿Glucose Predictor")
 st.markdown(f"**Current Time:** {datestamp}")
 
 
-# Load prediction & SHAP data
-pred_df = pd.read_csv("predicted_glucose_and_shap.csv",sep=",")
-pred_df['Timestamp'] = pd.to_datetime(pred_df['Timestamp'], format='%Y-%m-%d %H:%M:%S')
+hyper_pred = {
+    30: 0.72,
+    60: 0.84,
+    120: 0.65
+}
 
-# Focus on a specific timestamp (e.g., "2021-12-28 23:45:00")
-target_time = pd.to_datetime("2021-12-28 23:45:00")
+hypo_pred = {
+    30: 0.03,
+    60: 0.02,
+    120: 0.01
+}
+
+# Time intervals you want to display
 time_intervals = [30, 60, 120]
 
-# Display each interval prediction with expandable SHAP section
+# Display predictions for each interval
 for interval in time_intervals:
-    row = pred_df[(pred_df['Timestamp'] == target_time) & (pred_df['Interval'] == interval)]
-    if not row.empty:
-        row = row.iloc[0]
-        with st.expander(f"🔮 {interval}-minute Prediction"):
-            st.markdown(f"**Hyperglycemia Probability:** {row['Predicted Probability Hyper']:.0%}")
-            st.markdown(f"**Hypoglycemia Probability:** {row['Predicted Probability Hypo']:.0%}")
-
+    with st.expander(f"🔮 {interval}-minute Prediction"):
+        st.markdown(f"**Hyperglycemia Probability:** {hyper_pred[interval]:.0%}")
+        st.markdown(f"**Hypoglycemia Probability:** {hypo_pred[interval]:.0%}")
 
 # Extract unique recent days (normalized to midnight)
 recent_days = df['Time'].dt.normalize().drop_duplicates().sort_values(ascending=False)
