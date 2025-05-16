@@ -1,0 +1,8 @@
+Time,Prediction,Feature,SHAP_value,Explanation,Extra_Explanation
+2021-12-28 23:45:00,Hyperglycemia,Glucose,0.35,Influence of 'Glucose' at time 2021-12-28 23:45:00,
+2021-12-28 23:45:00,Hyperglycemia,Carbs (recent),0.28,Influence of 'Carbs (recent)' at time 2021-12-28 23:45:00,
+2021-12-28 23:45:00,Hyperglycemia,Insulin Type = Long,0.21,Influence of 'Insulin Type = Long' at time 2021-12-28 23:45:00,
+2021-12-28 23:45:00,Hypoglycemia,Glucose,-0.45,Influence of 'Glucose' at time 2021-12-28 23:45:00,
+2021-12-28 23:45:00,Hypoglycemia,COB,-0.08,Influence of 'COB' at time 2021-12-28 23:45:00,
+2021-12-28 23:45:00,Hypoglycemia,IOB,-0.03,Influence of 'IOB' at time 2021-12-28 23:45:00,
+2021-12-28 23:45:00,General,,,"From insulin and carbohydrates we need to remember that rapid insulin should be injected 10–15 minutes before the meal, and that it is important it is rapid insulin.",✓ Contextual Insight
