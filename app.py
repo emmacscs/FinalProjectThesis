@@ -55,7 +55,10 @@ general_extras = df_XAI[
 
 # Format the explanation text
 explanation_shap = "🧠 **Explanation of Hyperglycemia Risk:**\n"
-explanation_shap += "The high probability of a hyperglycemic episode is likely due to:\n"
+explanation_shap += ("The high probability of a hyperglycemic episode is likely due to:\n"
+"                   - Injection of long-acting insulin at time 23:00:00"
+                   "- Elevated glucose level at time 22:30:00"
+                   "- Ingestion of meal with carbohydrates at time 22:00:00")
 
 for line in hyper_explanations:
     explanation_shap += f"  • {line}\n"
