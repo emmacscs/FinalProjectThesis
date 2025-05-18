@@ -116,7 +116,7 @@ st.plotly_chart(fig, use_container_width=True)
 
 # Explanation
 st.markdown("### 💡 Model Explanation")
-st.code(explanation_shap)
+st.code(explanation_gen)
 
 # Insight Section
 st.markdown("---")
