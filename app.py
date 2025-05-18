@@ -78,9 +78,9 @@ hyper_pred = {
 }
 
 hypo_pred = {
-    30: 0.03,
-    60: 0.02,
-    120: 0.01
+    30: 0.05,
+    60: 0.10,
+    120: 0.02
 }
 
 # Time intervals you want to display
