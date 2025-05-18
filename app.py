@@ -35,7 +35,12 @@ df_XAI['Time'] = pd.to_datetime(df_XAI['Time'], format='%Y-%m-%d %H:%M:%S')
 datestamp = "2021-12-28 23:45:00"
 hyper_prob = 0.84
 hypo_prob = 0.12
-explanation_gen = "The high probability of an hyperglycemic episode is due to your behavior in the last two hours."
+explanation_gen = ("The high probability of a hyperglycemic episode is due to your behavior in the last two hours.\n"
+                   "Most influential factors were:\n"
+                   "- insulin\n"
+                   "- past glucose levels\n"
+                   "- carbohydrates")
+
 hyper_explanations = df_XAI[
     (df_XAI["Prediction"] == "Hyperglycemia") &
     (df_XAI["Explanation"].notna()) &
