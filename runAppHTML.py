@@ -9,7 +9,7 @@ THIS FILE:
 Since the app can only be deployed through my streamlit github account this file is a version of the interface through html
 so anyone can run it.
 However, it does not have the buttons or exactly the same look as the streamlit app since it is less styled.
-In the HTML you can only find the explainer graph at the end instead of through a button like streamlit.
+In the HTML you can only find the explainer graph at the end of the page instead of through a button like streamlit.
 In the rpeort, the screenshots are of the deployment through streamlit that includes buttons, interactions and a nices looking-interface overall
 """
 app = Flask(__name__)
@@ -20,6 +20,7 @@ df['Time'] = pd.to_datetime(df['Time'], format='%Y-%m-%d %H:%M:%S')
 df_XAI = pd.read_csv("XAI_detailed.csv")
 df_XAI['Time'] = pd.to_datetime(df_XAI['Time'], format='%Y-%m-%d %H:%M:%S')
 
+#Obtained values using the notebook of ClassifierandExplainer in time datestamp "2021-12-28 23:45:00"
 hyper_pred = {15: 0.84, 30: 0.72, 60: 0.84, 120: 0.65}
 hypo_pred = {15: 0.12, 30: 0.08, 60: 0.10, 120: 0.02}
 
