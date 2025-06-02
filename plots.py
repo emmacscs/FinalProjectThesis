@@ -2,10 +2,8 @@ import pandas as pd
 import plotly.graph_objects as go
 
 def plotGlucose(df, selected_day=None):
-    # Convert to datetime if not already
     df['Time'] = pd.to_datetime(df['Time'])
 
-    # Filter to selected day (if any), otherwise default to last 24h
     if selected_day:
         day_df = df[df['Time'].dt.date == selected_day.date()].copy()
         title_suffix = selected_day.strftime("%A, %d %B %Y")
@@ -16,7 +14,6 @@ def plotGlucose(df, selected_day=None):
 
     fig = go.Figure()
 
-    # Background zones
     fig.add_shape(type="rect", x0=day_df['Time'].min(), x1=day_df['Time'].max(),
                   y0=-5, y1=3.9, fillcolor="pink", opacity=0.5, layer="below", line_width=0)
     fig.add_shape(type="rect", x0=day_df['Time'].min(), x1=day_df['Time'].max(),
@@ -24,18 +21,15 @@ def plotGlucose(df, selected_day=None):
     fig.add_shape(type="rect", x0=day_df['Time'].min(), x1=day_df['Time'].max(),
                   y0=10.01, y1=30, fillcolor="beige", opacity=0.5, layer="below", line_width=0)
 
-    # Glucose trace
     fig.add_trace(go.Scatter(
         x=day_df['Time'],
         y=day_df['Glucose'],
         name='Glucose',
-        visible=True,
         mode='lines',
         customdata=day_df[['Minutes since last Carbs', 'Minutes since last Insulin']].values,
         hovertemplate='Glucose: %{y}<br>Time: %{x}<br>Minutes since last meal: %{customdata[0]:.2f}<br>Minutes since last insulin : %{customdata[1]}<extra></extra>'
     ))
 
-    # Extra stats
     stats = [
         ('Carbs', day_df['Carbohydrates'], 'orange', 'Carbs: %{y}<br>Time: %{x}<extra></extra>'),
         ('Insulin', day_df['Rapid Insulin'] + day_df['Long Insulin'], 'purple', 'Insulin: %{y}<br>Time: %{x}<extra></extra>'),
@@ -44,7 +38,7 @@ def plotGlucose(df, selected_day=None):
         ('BPM', day_df['BPM'], 'red', 'BPM: %{y}<br>Time: %{x}<extra></extra>')
     ]
 
-    for name, y_data, color, hover in stats:
+    for i, (name, y_data, color, hover) in enumerate(stats):
         fig.add_trace(go.Scatter(
             x=day_df['Time'],
             y=y_data,
@@ -62,13 +56,10 @@ def plotGlucose(df, selected_day=None):
             visible[1 + stat_index] = True
         return visible
 
-    # Dropdown buttons
-    buttons = [
-        dict(label="--extra statistics--", method="update", args=[
-            {"visible": get_visible_array()},
-            {"yaxis2.title": ""}
-        ])
-    ]
+    buttons = [dict(label="--extra statistics--", method="update", args=[
+                    {"visible": get_visible_array()},
+                    {"yaxis2.title": ""}
+                ])]
 
     for i, (name, _, _, _) in enumerate(stats):
         buttons.append(dict(label=name, method="update", args=[
@@ -76,7 +67,6 @@ def plotGlucose(df, selected_day=None):
             {"yaxis2.title": name}
         ]))
 
-    # Layout
     fig.update_layout(
         updatemenus=[dict(
             type="dropdown",

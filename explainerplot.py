@@ -2,18 +2,6 @@ import plotly.graph_objects as go
 
 
 def plotExplainer(df, date_x, date_y):
-    """
-    Plots glucose and related features (carbs, insulin, etc.) between date_x and date_y.
-    Mimics plotGlucose structure but zoomed into a specific 2-hour window.
-    
-    Args:
-        df (pd.DataFrame): Main dataset with 'Time', 'Glucose', 'Carbohydrates', etc.
-        date_x (datetime): Start of the 2-hour window.
-        date_y (datetime): End of the 2-hour window.
-    
-    Returns:
-        go.Figure: Interactive Plotly figure.
-    """
     df_window = df[(df['Time'] >= date_x) & (df['Time'] <= date_y)].copy()
 
     fig = go.Figure()

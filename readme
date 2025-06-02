@@ -1,0 +1,53 @@
+# Bachelors Thesis Code: Explainable AI for Time Series Analysis of Patients with Type 1 Diabetes
+
+## Table of Contents
+1. [Project Overview](#project-overview)  
+2. [Folder Structure](#folder-structure)  
+3. [File Descriptions](#file-descriptions)  
+
+---
+
+## Project Overview  
+This thesis offers a full-cycle approach to explainability in diabetes management in four steps: preprocessing, machine learning model, XAI and XUI.
+It is meant as a research to find ways to incorporate XAI into diabetes management and improve understanding of the predictions and user trust.
+
+---
+
+## Folder Structure  
+- **_pycache_/** — Contains files for the use of python  
+- **.streamlit/** — Contains files for the use of streamlit
+- **data/** — Contains the original dataset as explained in the repport, obtained from Kaggle
+- **MachineLearning/** — Contains core notebooks: preprocessing, mathematicalmodel, machinelearning and the CSV obtained that will be used for the interface
+---
+
+## File Descriptions  
+
+### data/ 
+- `fitbit_data` — *Data of phisical activity*  
+- `mySugr_data` — *Data of carbohydrates meals and insulin injections*  
+- `reader_data` — *Data of the CGM system*  
+
+### MachineLearning/  
+- `ClassifierandExplainer.ipynb` — *Notebook with the implementation of the classifiers and XAI system, from these we obtained the probabilities protrayed in the interface and the CSV files: XAI_summary and XAI_detailed*  
+- `MathematicalModel.ipynb` — *Notebook with the code for the kinetics absorption of insulin and carbohydrates, from this we obtain CSV kinetics*  
+- `processing.ipynb` — *Notebook with the preprocessing of Kaggle and my own, from this we obtain the CSV preprocessing*  
+- `kinetics.csv` — *Dataset after the mathematical model*  
+- `preprocessing.csv` — *Dataset after preprocessing*  
+- `windowed_data_30min.csv` — *Dataset only used for the evaluation of explanations experiment in the report, not in the interface*  
+- `XAI_detailed.csv` — *CSV with the XAI values for the interface and explanations*  
+- `XAI_summary.csv` — *CSV with the XAI summary and probabilities for the interface*  
+
+### Root files  
+- `appControlstreamlit.py` — *App to be deployed in streamlit for the control group*  
+- `appExperimentalstreamlit.py` — *App to be deployed in streamlit for the experimental group*  
+- `explainerplot.py` — *Code to obtain the explainer graph*  
+- `kinetics.csv` — *Copy From machine learning folder*  
+- `otherstats.py` — *Code to obtain the carbs, insulin, bpm and exercise plots*  
+- `plots.py` — *Code to obtain the glucose explorer plot*  
+- `readme` — This file.  
+- `requirements.txt` — Python dependencies and environment setup.  
+- `runAppHTML.py` — *Code to deploy a version of the interface in a laptop through HTML, but it looks a bit different to the streamlit version*  
+- `XAI_detailed.csv` — *Copy From machine learning folder*  
+- `XAI_summary.csv` — *Copy From machine learning folder*  
+
+---
